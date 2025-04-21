@@ -1,0 +1,1283 @@
+openapi: 3.0.3
+info:
+  title: Backend InternalTravel
+  version: 1.0.0
+  description: Backend para las reservas de internas
+servers:
+  - url: 
+paths:
+  /itlBooking:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adults:
+                    type: array
+                    description: Lista de adultos en la reserva
+                    items: {}
+                  childs:
+                    type: array
+                    description: Lista de menores en la reserva
+                    items: {}
+                  contactInformation:
+                    type: array
+                    description: Información de contacto de la reserva
+                    items: {}
+                  ssrs:
+                    type: array
+                    description: >-
+                      Lista de SSRs (Special Service Requests) asociados a la
+                      reserva
+                    items: {}
+                  osiRemarks:
+                    type: array
+                    description: Observaciones específicas para la reserva
+                    items: {}
+                  remarks:
+                    type: array
+                    description: Anotaciones generales de la reserva
+                    items: {}
+                  flights:
+                    type: array
+                    description: Lista de vuelos asociados a la reserva
+                    items: {}
+                  PNR:
+                    type: string
+                    description: PNR de Amadeus
+                required:
+                  - adults
+                  - flights
+                  - PNR
+              example:
+                adults:
+                  - id: 1
+                    firstName: John
+                    surname: Doe
+                    hasInfants: false
+                    amadeusId: '101'
+                childs:
+                  - id: 3
+                    firstName: Alex
+                    surname: Doe
+                    dateOfBirth: '2018'
+                    amadeusId: '201'
+                contactInformation:
+                  - telephone: '+1'
+                    email: john.doe@example.com
+                    paxReference:
+                      - id: 2
+                ssrs:
+                  - type: CTCE
+                    freeText: john.doe//example.com
+                    status:
+                      type: HK
+                    paxReference:
+                      - id: 2
+                osiRemarks:
+                  - type: OS
+                    freeText: SPECIAL MEAL REQUEST
+                    companyId: XX
+                remarks:
+                  - type: RM
+                    freeText: RESERVATION CREATED BY API
+                flights:
+                  - id: 1
+                    airportCodeOrigin: LAX
+                    airportCodeDestination: JFK
+                    departureDate: '2025'
+                    flightNumber: '5678'
+                    companyId: XX
+                PNR: PNR here
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    description: Código de error de ITL
+                  errorDescription:
+                    type: string
+                    description: Descripión del error
+              example:
+                errorCode: ITL_errorCode
+                errorDescription: Error description
+      summary: Hacer la Reserva
+      operationId: Hacer la Reserva
+      description: >-
+        Devuelve los datos de la reserva, el PNR de Amadeus y el localizador de
+        la resereva.
+      tags:
+        - Booking
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              idReserva: 1
+            schema:
+              type: object
+              properties:
+                idReserva:
+                  type: number
+                  description: Identificador único de la reserva
+              required:
+                - idReserva
+  /itlUpdateBooking:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adults:
+                    type: array
+                    description: Lista de adultos en la reserva
+                    items: {}
+                  childs:
+                    type: array
+                    description: Lista de menores en la reserva
+                    items: {}
+                  contactInformation:
+                    type: array
+                    description: Información de contacto de la reserva
+                    items: {}
+                  ssrs:
+                    type: array
+                    description: >-
+                      Lista de SSRs (Special Service Requests) asociados a la
+                      reserva
+                    items: {}
+                  osiRemarks:
+                    type: array
+                    description: Observaciones específicas para la reserva
+                    items: {}
+                  remarks:
+                    type: array
+                    description: Anotaciones generales de la reserva
+                    items: {}
+                  flights:
+                    type: array
+                    description: Lista de vuelos asociados a la reserva
+                    items: {}
+                  PNR:
+                    type: string
+                    description: PNR de Amadeus
+                required:
+                  - adults
+                  - flights
+                  - PNR
+              example:
+                adults:
+                  - id: 1
+                    firstName: John
+                    surname: Doe
+                    hasInfants: false
+                    amadeusId: '101'
+                childs:
+                  - id: 3
+                    firstName: Alex
+                    surname: Doe
+                    dateOfBirth: '2018'
+                    amadeusId: '201'
+                contactInformation:
+                  - telephone: '+1'
+                    email: john.doe@example.com
+                    paxReference:
+                      - id: 2
+                ssrs:
+                  - type: CTCE
+                    freeText: john.doe//example.com
+                    status:
+                      type: HK
+                    paxReference:
+                      - id: 2
+                osiRemarks:
+                  - type: OS
+                    freeText: SPECIAL MEAL REQUEST
+                    companyId: XX
+                remarks:
+                  - type: RM
+                    freeText: RESERVATION CREATED BY API
+                flights:
+                  - id: 1
+                    airportCodeOrigin: LAX
+                    airportCodeDestination: JFK
+                    departureDate: '2025'
+                    flightNumber: '5678'
+                    companyId: XX
+                PNR: PNR here
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    description: Código de error de ITL
+                  errorDescription:
+                    type: string
+                    description: Descripión del error
+              example:
+                errorCode: ITL_errorCode
+                errorDescription: Error description
+      summary: Actualizar la reserva con los datos nuevos de la BD
+      operationId: Actualizar la reserva con los datos nuevos de la BD
+      description: Devuelve la reserva con los datos actualizados
+      tags:
+        - Booking
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              idReserva: 1
+            schema:
+              type: object
+              properties:
+                idReserva:
+                  type: number
+                  description: Identificador único de la reserva
+              required:
+                - idReserva
+  /itlDeleteBooking:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            string:
+              example: |+
+                Delete
+
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    description: Código de error de ITL
+                  errorDescription:
+                    type: string
+                    description: Descripión del error
+              example:
+                errorCode: ITL_errorCode
+                errorDescription: Error description
+      summary: Eliminar la reserva
+      operationId: Eliminar la reserva
+      description: Devuelve mensaje si se ha eliminado bien
+      tags:
+        - Booking
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              locata: 1
+            schema:
+              type: object
+              properties:
+                locata:
+                  type: number
+                  description: Identificador único de la reserva
+              required:
+                - locata
+  /multiavailability:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                required:
+                  - basicFlightInfo
+                  - infoOnClasses
+                  - additionalFlightInfo
+                properties:
+                  basicFlightInfo:
+                    type: object
+                  infoOnClasses:
+                    type: object
+                  additionalFlightInfo:
+                    type: object
+              example:
+                basicFlightInfo:
+                  - flightDetails:
+                      departureDate: '2025-12-15'
+                      departureTime: '06:45'
+                      arrivalDate: '2025-12-15'
+                      arrivalTime: '08:20'
+                    departureLocation:
+                      cityAirport: LAX
+                    arrivalLocation:
+                      cityAirport: JFK
+                    marketingCompany:
+                      identifier: XX
+                    operatingCompany:
+                      identifier: XX
+                    flightIdentification:
+                      number: '5678'
+                    productTypeDetail:
+                      productIndicators: []
+                    lineItemNumber: 1
+                    administratingCompany:
+                      identifier: XX
+                    adminFlightIdentification:
+                      number: '3940'
+                infoOnClasses:
+                  - classOfService:
+                      serviceClass: 'Y'
+                      availabilityStatus: '4'
+                      seatsAvailable: 9
+                additionalFlightInfo:
+                  - flightDetails:
+                      typeOfAircraft: '320'
+                      numberOfStops: 0
+                      legDuration: '0135'
+                    productFacilities:
+                      - '**type**: `1A`'
+      summary: Consultar disponibilidad de vuelos
+      operationId: Consultar disponibilidad de vuelos
+      description: Devuelve la disponibilidad de vuelos
+      tags:
+        - Disponibilidad
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              interlineOptions:
+                soloXCIA: false
+                vuelosMax: 5
+                fechaRef: '2025'
+                actionCodeMD: 1
+                maxIntentos: 3
+              amadeusObject:
+                messageActionDetails:
+                  functionDetails:
+                    businessFunction: 1
+                    actionCode: 1
+                requestSection:
+                  availabilityProductInfo:
+                    availabilityDetails:
+                      departureDate: '2025'
+                    departureLocationInfo:
+                      cityAirport: LAX
+                    arrivalLocationInfo:
+                      cityAirport: JFK
+                  availabilityOptions:
+                    typeOfRequest: '1'
+                    optionInfo:
+                      - option: BIA
+                        optionInformation: 1A
+                      - 'option: BIA'
+                      - 'optionInformation: 1A'
+            schema:
+              type: object
+              properties:
+                interlineOptions:
+                  type: object
+                  properties:
+                    soloXCIA:
+                      type: boolean
+                      description: Indica si se debe buscar una CIA en específico	
+                    vuelosMax:
+                      type: number
+                      description: Número máximo de vuelos a buscar
+                    fechaRef:
+                      type: string
+                      description: 12-15 (string, required) - Fecha de referencia
+                    actionCodeMD:
+                      type: number
+                      description: Código de acción de MD
+                    maxIntentos:
+                      type: number
+                      description: Número máximo de intentos
+                  required:
+                    - soloXCIA
+                    - vuelosMax
+                    - actionCodeMD
+                    - maxIntentos
+                amadeusObject:
+                  type: object
+                  properties:
+                    messageActionDetails:
+                      type: object
+                      properties:
+                        functionDetails:
+                          type: object
+                          properties:
+                            businessFunction:
+                              type: number
+                              description: Función de negocio
+                            actionCode:
+                              type: number
+                              description: Código de acción
+                          required:
+                            - businessFunction
+                            - actionCode
+                      required:
+                        - functionDetails
+                    requestSection:
+                      type: object
+                      properties:
+                        availabilityProductInfo:
+                          type: object
+                          properties:
+                            availabilityDetails:
+                              type: object
+                              properties:
+                                departureDate:
+                                  type: string
+                                  description: 12-15 (string, required) - Fecha de salida
+                            departureLocationInfo:
+                              type: object
+                              properties:
+                                cityAirport:
+                                  type: string
+                                  description: Código IATA del aeropuerto de origen
+                              required:
+                                - cityAirport
+                            arrivalLocationInfo:
+                              type: object
+                              properties:
+                                cityAirport:
+                                  type: string
+                                  description: Código IATA del aeropuerto de destino
+                              required:
+                                - cityAirport
+                          required:
+                            - availabilityDetails
+                            - departureLocationInfo
+                            - arrivalLocationInfo
+                        availabilityOptions:
+                          type: object
+                          properties:
+                            typeOfRequest:
+                              type: string
+                              description: Tipo de petición
+                            optionInfo:
+                              type: array
+                              description: Información de la opción
+                              items: {}
+                          required:
+                            - typeOfRequest
+                            - optionInfo
+                      required:
+                        - availabilityProductInfo
+                        - availabilityOptions
+                  required:
+                    - messageActionDetails
+                    - requestSection
+              required:
+                - interlineOptions
+                - amadeusObject
+  /itlGetPnr:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            String:
+              example: |+
+                PNR here
+
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    description: Código de error de ITL
+                  errorDescription:
+                    type: string
+                    description: Descripión del error
+              example:
+                errorCode: ITL_errorCode
+                errorDescription: Error description
+      summary: Recuperar PNR de Amadeus
+      operationId: Recuperar PNR de Amadeus
+      description: Devuelve el PNR de Amadeus
+      tags:
+        - Amadeus
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              locata: ''
+            schema:
+              type: object
+              properties:
+                locata:
+                  type: string
+                  description: Localizador de la reserva
+              required:
+                - locata
+  /generateXsid:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    description: Mensaje de éxito
+                  msg:
+                    type: string
+                    description: >-
+                      Si el usuario y contraseña es correcto da True, sino te
+                      informa que el usuario o contraseña son incorrectos
+                  XSID:
+                    type: string
+                    description: XSID
+                required:
+                  - success
+                  - msg
+              example:
+                success: true/false
+                msg: true/Usuario o contraseña incorrectos
+                XSID: '123456'
+      summary: Generar XSID
+      operationId: Generar XSID
+      description: Devuelve el XSID
+      tags:
+        - Session
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              usuario: johndoe
+              password: qwerty
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: string
+                  description: Usuario
+                password:
+                  type: string
+                  description: Contraseña
+              required:
+                - usuario
+                - password
+  /itlToken:
+    get:
+      parameters:
+      - name: xsid
+        in: query
+        required: true
+        schema:
+          type: string
+        description: XSID para obtener el token
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acces_token:
+                    type: string
+                    description: Token de acceso
+                  expires_in:
+                    type: number
+                    description: Tiempo de expiración del token
+                  scope:
+                    type: string
+                    description: Ámbito del token
+                  token_type:
+                    type: string
+                    description: Tipo de token
+                required:
+                  - acces_token
+                  - expires_in
+                  - scope
+                  - token_type
+              example:
+                acces_token: token12345
+                expires_in: 5000
+                scope: scopes Varios
+                token_type: type
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    description: Código de error de ITL
+                  errorDescription:
+                    type: string
+                    description: Descripión del error
+              example:
+                errorCode: ITL_errorCode
+                errorDescription: Error description
+      summary: Obtener token Hydra
+      operationId: Obtener token Hydra
+      description: Devuelve el token de Hydra
+      tags:
+        - Session
+components:
+  schemas:
+    GeneralResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: ITL_errorCode
+          description: Código de error de ITL
+        errorDescription:
+          type: string
+          example: Error description
+          description: Descripión del error
+    BookingRequest:
+      type: object
+      required:
+        - idReserva
+      properties:
+        idReserva:
+          type: number
+          example: 1
+          description: Identificador único de la reserva
+    DeleteBookingRequest:
+      type: object
+      required:
+        - locata
+      properties:
+        locata:
+          type: number
+          example: 1
+          description: Identificador único de la reserva
+    XSIDResponse:
+      type: object
+      required:
+        - success
+        - msg
+      properties:
+        success:
+          type: string
+          example: true/false
+          description: Mensaje de éxito
+        msg:
+          type: string
+          example: true/Usuario o contraseña incorrectos
+          description: >-
+            Si el usuario y contraseña es correcto da True, sino te informa que
+            el usuario o contraseña son incorrectos
+        XSID:
+          type: string
+          example: '123456'
+          description: XSID
+    Booking:
+      type: object
+      required:
+        - adults
+        - flights
+        - PNR
+      properties:
+        adults:
+          type: array
+          items: {}
+          description: Lista de adultos en la reserva
+        childs:
+          type: array
+          items: {}
+          description: Lista de menores en la reserva
+        contactInformation:
+          type: array
+          items: {}
+          description: Información de contacto de la reserva
+        ssrs:
+          type: array
+          items: {}
+          description: Lista de SSRs (Special Service Requests) asociados a la reserva
+        osiRemarks:
+          type: array
+          items: {}
+          description: Observaciones específicas para la reserva
+        remarks:
+          type: array
+          items: {}
+          description: Anotaciones generales de la reserva
+        flights:
+          type: array
+          items: {}
+          description: Lista de vuelos asociados a la reserva
+        PNR:
+          type: string
+          example: PNR here
+          description: PNR de Amadeus
+    Adult:
+      type: object
+      required:
+        - id
+        - firstName
+        - surname
+        - hasInfants
+        - amadeusId
+      properties:
+        id:
+          type: number
+          example: 1
+          description: Identificador único del adulto
+        firstName:
+          type: string
+          example: John
+          description: Nombre del adulto
+        surname:
+          type: string
+          example: Doe
+          description: Apellido del adulto
+        hasInfants:
+          type: boolean
+          description: Indica si el adulto viaja con un infante
+        amadeusId:
+          type: string
+          example: '101'
+          description: Identificador único en Amadeus del adulto
+    Child:
+      type: object
+      required:
+        - id
+        - firstName
+        - surname
+        - amadeusId
+      properties:
+        id:
+          type: number
+          example: 3
+          description: Identificador único del menor
+        firstName:
+          type: string
+          example: Alex
+          description: Nombre del menor
+        surname:
+          type: string
+          example: Doe
+          description: Apellido del menor
+        dateOfBirth:
+          type: string
+          example: '2018'
+          description: 08-15 (Date, required) - Fecha de nacimiento del menor
+        amadeusId:
+          type: string
+          example: '201'
+          description: Identificador único en Amadeus del menor
+    Contact:
+      type: object
+      properties:
+        telephone:
+          type: string
+          example: '+1'
+          description: 800-555-1234 (string, optional) - Número de teléfono de contacto
+        email:
+          type: string
+          example: john.doe@example.com
+          description: Dirección de correo electrónico de contacto
+        paxReference:
+          type: array
+          items: {}
+          description: Referencia a los pasajeros asociados al contacto
+    PaxReference:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: number
+          example: 2
+          description: Identificador del pasajero asociado
+    Ssr:
+      type: object
+      required:
+        - type
+        - freeText
+      properties:
+        type:
+          type: string
+          example: CTCE
+          description: Tipo de SSR (Special Service Request)
+        freeText:
+          type: string
+          example: john.doe//example.com
+          description: Texto libre asociado al SSR
+        status:
+          $ref: '#/components/schemas/Status'
+        paxReference:
+          type: array
+          items: {}
+          description: Referencia a los pasajeros asociados al SSR
+    Status:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          example: HK
+          description: Tipo de estado
+    OsiRemark:
+      type: object
+      required:
+        - type
+        - freeText
+        - companyId
+      properties:
+        type:
+          type: string
+          example: OS
+          description: Tipo de observación
+        freeText:
+          type: string
+          example: SPECIAL MEAL REQUEST
+          description: Texto de la observación
+        companyId:
+          type: string
+          example: XX
+          description: Identificador de la compañía aérea asociada
+    Remark:
+      type: object
+      required:
+        - type
+        - freeText
+      properties:
+        type:
+          type: string
+          example: RM
+          description: Tipo de anotación
+        freeText:
+          type: string
+          example: RESERVATION CREATED BY API
+          description: Texto de la anotación
+    Flight:
+      type: object
+      required:
+        - id
+        - airportCodeOrigin
+        - airportCodeDestination
+        - flightNumber
+        - companyId
+      properties:
+        id:
+          type: number
+          example: 1
+          description: Identificador único del vuelo
+        airportCodeOrigin:
+          type: string
+          example: LAX
+          description: Código IATA del aeropuerto de origen
+        airportCodeDestination:
+          type: string
+          example: JFK
+          description: Código IATA del aeropuerto de destino
+        departureDate:
+          type: string
+          example: '2025'
+          description: 12-15 (Date, required) - Fecha de salida del vuelo
+        flightNumber:
+          type: string
+          example: '5678'
+          description: Número de vuelo
+        companyId:
+          type: string
+          example: XX
+          description: Identificador de la aerolínea
+    multiavailability:
+      type: object
+      required:
+        - interlineOptions
+        - amadeusObject
+      properties:
+        interlineOptions:
+          type: object
+          required:
+            - soloXCIA
+            - vuelosMax
+            - actionCodeMD
+            - maxIntentos
+          properties:
+            soloXCIA:
+              type: boolean
+              description: Indica si se debe buscar una CIA en específico
+            vuelosMax:
+              type: number
+              example: 5
+              description: Número máximo de vuelos a buscar
+            fechaRef:
+              type: string
+              example: '2025'
+              description: 12-15 (string, required) - Fecha de referencia
+            actionCodeMD:
+              type: number
+              example: 1
+              description: Código de acción de MD
+            maxIntentos:
+              type: number
+              example: 3
+              description: Número máximo de intentos
+        amadeusObject:
+          type: object
+          required:
+            - messageActionDetails
+            - requestSection
+          properties:
+            messageActionDetails:
+              type: object
+              required:
+                - functionDetails
+              properties:
+                functionDetails:
+                  type: object
+                  required:
+                    - businessFunction
+                    - actionCode
+                  properties:
+                    businessFunction:
+                      type: number
+                      example: 1
+                      description: Función de negocio
+                    actionCode:
+                      type: number
+                      example: 1
+                      description: Código de acción
+            requestSection:
+              type: object
+              required:
+                - availabilityProductInfo
+                - availabilityOptions
+              properties:
+                availabilityProductInfo:
+                  type: object
+                  required:
+                    - availabilityDetails
+                    - departureLocationInfo
+                    - arrivalLocationInfo
+                  properties:
+                    availabilityDetails:
+                      type: object
+                      properties:
+                        departureDate:
+                          type: string
+                          example: '2025'
+                          description: 12-15 (string, required) - Fecha de salida
+                    departureLocationInfo:
+                      type: object
+                      required:
+                        - cityAirport
+                      properties:
+                        cityAirport:
+                          type: string
+                          example: LAX
+                          description: Código IATA del aeropuerto de origen
+                    arrivalLocationInfo:
+                      type: object
+                      required:
+                        - cityAirport
+                      properties:
+                        cityAirport:
+                          type: string
+                          example: JFK
+                          description: Código IATA del aeropuerto de destino
+                availabilityOptions:
+                  type: object
+                  required:
+                    - typeOfRequest
+                    - optionInfo
+                  properties:
+                    typeOfRequest:
+                      type: string
+                      example: '1'
+                      description: Tipo de petición
+                    optionInfo:
+                      type: array
+                      items: {}
+                      description: Información de la opción
+    OptionInfo:
+      type: object
+      required:
+        - option
+        - optionInformation
+      properties:
+        option:
+          type: string
+          example: BIA
+          description: Opción
+        optionInformation:
+          type: string
+          example: 1A
+          description: Información de la opción
+    itlGetPnr:
+      type: object
+      required:
+        - locata
+      properties:
+        locata:
+          type: string
+          description: Localizador de la reserva
+    GenerateXSID:
+      type: object
+      required:
+        - usuario
+        - password
+      properties:
+        usuario:
+          type: string
+          example: johndoe
+          description: Usuario
+        password:
+          type: string
+          example: qwerty
+          description: Contraseña
+    Token:
+      type: object
+      required:
+        - acces_token
+        - expires_in
+        - scope
+        - token_type
+      properties:
+        acces_token:
+          type: string
+          example: token12345
+          description: Token de acceso
+        expires_in:
+          type: number
+          example: 5000
+          description: Tiempo de expiración del token
+        scope:
+          type: string
+          example: scopes Varios
+          description: Ámbito del token
+        token_type:
+          type: string
+          example: type
+          description: Tipo de token
+    multiavailabilityResponse:
+      type: object
+      required:
+        - basicFlightInfo
+        - infoOnClasses
+        - additionalFlightInfo
+      properties:
+        basicFlightInfo:
+          type: array
+          items: {}
+          description: Información básica de los vuelos
+        infoOnClasses:
+          type: array
+          items: {}
+          description: Información de las clases de los vuelos
+        additionalFlightInfo:
+          type: array
+          items: {}
+          description: Información adicional de los vuelos
+    BasicFlightInfo:
+      type: object
+      required:
+        - flightDetails
+        - departureLocation
+        - arrivalLocation
+        - marketingCompany
+        - operatingCompany
+        - flightIdentification
+        - productTypeDetail
+        - lineItemNumber
+        - administratingCompany
+        - adminFlightIdentification
+      properties:
+        flightDetails:
+          type: object
+          required:
+            - departureDate
+            - departureTime
+            - arrivalDate
+            - arrivalTime
+          properties:
+            departureDate:
+              type: string
+              example: '2025-12-15'
+              description: Fecha de salida
+            departureTime:
+              type: string
+              example: '06:45'
+              description: Hora de salida
+            arrivalDate:
+              type: string
+              example: '2025-12-15'
+              description: Fecha de llegada
+            arrivalTime:
+              type: string
+              example: '08:20'
+              description: Hora de llegada
+        departureLocation:
+          type: object
+          required:
+            - cityAirport
+          properties:
+            cityAirport:
+              type: string
+              example: LAX
+              description: Código IATA del aeropuerto de origen
+        arrivalLocation:
+          type: object
+          required:
+            - cityAirport
+          properties:
+            cityAirport:
+              type: string
+              example: JFK
+              description: Código IATA del aeropuerto de destino
+        marketingCompany:
+          type: object
+          required:
+            - identifier
+          properties:
+            identifier:
+              type: string
+              example: XX
+              description: Identificador de la compañía aérea
+        operatingCompany:
+          type: object
+          required:
+            - identifier
+          properties:
+            identifier:
+              type: string
+              example: XX
+              description: Identificador de la compañía aérea
+        flightIdentification:
+          type: object
+          required:
+            - number
+          properties:
+            number:
+              type: string
+              example: '5678'
+              description: Número de vuelo
+        productTypeDetail:
+          type: object
+          required:
+            - productIndicators
+          properties:
+            productIndicators:
+              type: array
+              items: {}
+              description: Indicadores del producto
+        lineItemNumber:
+          type: number
+          example: 1
+          description: Número de línea
+        administratingCompany:
+          type: object
+          required:
+            - identifier
+          properties:
+            identifier:
+              type: string
+              example: XX
+              description: Identificador de la compañía aérea
+        adminFlightIdentification:
+          type: object
+          required:
+            - number
+          properties:
+            number:
+              type: string
+              example: '3940'
+              description: Número de vuelo
+    InfoOnClasses:
+      type: object
+      required:
+        - classOfService
+      properties:
+        classOfService:
+          type: object
+          required:
+            - serviceClass
+            - availabilityStatus
+            - seatsAvailable
+          properties:
+            serviceClass:
+              type: string
+              example: 'Y'
+              description: Clase de servicio
+            availabilityStatus:
+              type: string
+              example: '4'
+              description: Estado de disponibilidad
+            seatsAvailable:
+              type: number
+              example: 9
+              description: Número de asientos disponibles
+    AdditionalFlightInfo:
+      type: object
+      required:
+        - flightDetails
+        - productFacilities
+      properties:
+        flightDetails:
+          type: object
+          required:
+            - typeOfAircraft
+            - numberOfStops
+            - legDuration
+          properties:
+            typeOfAircraft:
+              type: string
+              example: '320'
+              description: Tipo de aeronave
+            numberOfStops:
+              type: number
+              description: Número de escalas
+            legDuration:
+              type: string
+              example: '0135'
+              description: Duración del trayecto
+        productFacilities:
+          type: array
+          items: {}
+tags:
+  - name: Booking
+  - name: Disponibilidad
+  - name: Amadeus
+  - name: Session

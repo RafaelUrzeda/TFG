@@ -1,0 +1,290 @@
+FORMAT: 1A
+HOST: 
+
+# Backend Interline
+Backend para las reservas de Internas
+
+# Group Booking
+
+## Hacer la Reserva [/itlBooking]
+
+### Hacer la Reserva [POST]
+
+Devuelve los datos de la reserva, el PNR de Amadeus y el localizador de la resereva.
+
++ Request (application/json) 
+    + Attributes (BookingRequest)
+
++ Response 200 (application/json)
+    + Attributes (Booking)
+
++ Response 404 (application/json)
+    + Attributes (GeneralResponse)
+
+## Actualizar reserva [/itlUpdateBooking]
+
+### Actualizar la reserva con los datos nuevos de la BD [POST]
+
+Devuelve la reserva con los datos actualizados
+
++ Request (application/json) 
+    + Attributes (BookingRequest)
+
++ Response 200 (application/json)
+    + Attributes (Booking)
+
++ Response 404 (application/json)
+    + Attributes (GeneralResponse)
+
+## Eliminar reserva [/itlDeleteBooking]
+
+### Eliminar la reserva [POST]
+
+Devuelve mensaje si se ha eliminado bien
+
++ Request (application/json) 
+    + Attributes (DeleteBookingRequest)
+
++ Response 200 (string)
+    Delete
+
++ Response 404 (application/json)
+    + Attributes (GeneralResponse)
+
+# Group Disponibilidad
+
+## Consultar Disponibilidad [/multiavailability]
+
+### Consultar disponibilidad de vuelos [POST]
+
+Devuelve la disponibilidad de vuelos
+
++ Request (application/json)
+    + Attributes (multiavailability)
+
++ Response 200 (application/json)
+    + Attributes (multiavailabilityResponse)
+
+# Group Amadeus
+
+## Recuperar PNR [/itlGetPnr]
+
+### Recuperar PNR de Amadeus [POST]
+
+Devuelve el PNR de Amadeus
+
++ Request (application/json)
+    + Attributes (itlGetPnr)
+
++ Response 200 (String)
+    PNR here
+
++ Response 404 (application/json)
+    + Attributes (GeneralResponse)
+
+# Group Session
+
+## Generar XSID [/generateXsid]
+
+### Generar XSID [POST]
+
+Devuelve el XSID
+
++ Request (application/json)
+    + Attributes (GenerateXSID)
+
++ Response 200 (application/json)
+    + Attributes (XSIDResponse)
+
+
+## Obtener token Hydra [/itlToken?xsid={xsid}]
+
+### Obtener token Hydra [GET]
+
+Devuelve el token de Hydra
+
++ Response 200 (application/json)
+    + Attributes (Token)
+
++ Response 401 (application/json)
+    + Attributes (GeneralResponse)
+
+# Data Structures
+
+## GeneralResponse
++ errorCode: ITL_errorCode (string) - Código de error de ITL
++ errorDescription: Error description (string) - Descripión del error
+
+## BookingRequest
++ idReserva: 1 (number, required) - Identificador único de la reserva
+
+## DeleteBookingRequest
++ locata: 1 (number, required) - Identificador único de la reserva
+
+##XSIDResponse
++ success: true/false (string, required) - Mensaje de éxito
++ msg: true/Usuario o contraseña incorrectos (string, required) - Si el usuario y contraseña es correcto da True, sino te informa que el usuario o contraseña son incorrectos
++ XSID: 123456 (string, optional) - XSID
+
+## Booking (object)
++ adults (array[Adult], required) - Lista de adultos en la reserva
++ childs (array[Child], optional) - Lista de menores en la reserva
++ contactInformation (array[Contact], optional) - Información de contacto de la reserva
++ ssrs (array[Ssr], optional) - Lista de SSRs (Special Service Requests) asociados a la reserva
++ osiRemarks (array[OsiRemark], optional) - Observaciones específicas para la reserva
++ remarks (array[Remark], optional) - Anotaciones generales de la reserva
++ flights (array[Flight], required) - Lista de vuelos asociados a la reserva
++ PNR: PNR here (string, required) - PNR de Amadeus
+
+---
+
+## Adult (object)
++ id: 1 (number, required) - Identificador único del adulto
++ firstName: John (string, required) - Nombre del adulto
++ surname: Doe (string, required) - Apellido del adulto
++ hasInfants: false (boolean, required) - Indica si el adulto viaja con un infante
++ amadeusId: 101 (string, required) - Identificador único en Amadeus del adulto
+
+---
+
+## Child (object)
++ id: 3 (number, required) - Identificador único del menor
++ firstName: Alex (string, required) - Nombre del menor
++ surname: Doe (string, required) - Apellido del menor
++ dateOfBirth: 2018-08-15 (Date, required) - Fecha de nacimiento del menor
++ amadeusId: 201 (string, required) - Identificador único en Amadeus del menor
+
+---
+
+## Contact (object)
++ telephone: +1-800-555-1234 (string, optional) - Número de teléfono de contacto
++ email: john.doe@example.com (string, optional) - Dirección de correo electrónico de contacto
++ paxReference (array[PaxReference], optional) - Referencia a los pasajeros asociados al contacto
+
+---
+
+## PaxReference (object)
++ id: 2 (number, required) - Identificador del pasajero asociado
+
+---
+
+## Ssr (object)
++ type: CTCE (string, required) - Tipo de SSR (Special Service Request)
++ freeText: john.doe//example.com (string, required) - Texto libre asociado al SSR
++ status (Status, optional) - Estado del SSR
++ paxReference (array[PaxReference], optional) - Referencia a los pasajeros asociados al SSR
+
+---
+
+## Status (object)
++ type: HK (string, required) - Tipo de estado
+
+---
+
+## OsiRemark (object)
++ type: OS (string, required) - Tipo de observación
++ freeText: SPECIAL MEAL REQUEST (string, required) - Texto de la observación
++ companyId: XX (string, required) - Identificador de la compañía aérea asociada
+
+---
+
+## Remark (object)
++ type: RM (string, required) - Tipo de anotación
++ freeText: RESERVATION CREATED BY API (string, required) - Texto de la anotación
+
+---
+
+## Flight (object)
++ id: 1 (number, required) - Identificador único del vuelo
++ airportCodeOrigin: LAX (string, required) - Código IATA del aeropuerto de origen
++ airportCodeDestination: JFK (string, required) - Código IATA del aeropuerto de destino
++ departureDate: 2025-12-15 (Date, required) - Fecha de salida del vuelo
++ flightNumber: 5678 (string, required) - Número de vuelo
++ companyId: XX (string, required) - Identificador de la aerolínea
+
+
+## multiavailability (object)
++ interlineOptions (object, required)
+    + soloXCIA: false (boolean, required) - Indica si se debe buscar una CIA en específico
+    + vuelosMax: 5 (number, required) - Número máximo de vuelos a buscar
+    + fechaRef: 2025-12-15 (string, required) - Fecha de referencia
+    + actionCodeMD: 1 (number, required) - Código de acción de MD
+    + maxIntentos: 3 (number, required) - Número máximo de intentos
++ amadeusObject (object, required)
+    + messageActionDetails (object, required)
+        + functionDetails (object, required)
+            + businessFunction: 1 (number, required) - Función de negocio
+            + actionCode: 1 (number, required) - Código de acción
+    + requestSection (object, required)
+        + availabilityProductInfo (object, required)
+            + availabilityDetails (object, required)
+                + departureDate: 2025-12-15 (string, required) - Fecha de salida
+            + departureLocationInfo (object, required)
+                + cityAirport: LAX (string, required) - Código IATA del aeropuerto de origen
+            + arrivalLocationInfo (object, required)
+                + cityAirport: JFK (string, required) - Código IATA del aeropuerto de destino
+        + availabilityOptions (object, required)
+            + typeOfRequest: 1 (string, required) - Tipo de petición
+            + optionInfo (array[OptionInfo], required) - Información de la opción
+                + option: BIA (string, required) - Opción
+                + optionInformation: 1A (string, required) - Información de la opción
+
+## OptionInfo (object)
++ option: BIA (string, required) - Opción
++ optionInformation: 1A (string, required) - Información de la opción
+
+## itlGetPnr (object)
++ locata (string, required) - Localizador de la reserva
+
+## GenerateXSID (object)
++ usuario: johndoe (string, required) - Usuario
++ password: qwerty (string, required) - Contraseña
+
+## Token (object)
++ acces_token: token12345 (string, required) - Token de acceso
++ expires_in: 5000h (number, required) - Tiempo de expiración del token
++ scope: scopes Varios (string, required) - Ámbito del token
++ token_type: type (string, required) - Tipo de token
+
+## multiavailabilityResponse (object)
+- **basicFlightInfo** (array[BasicFlightInfo], required) - Información básica de los vuelos
+- **infoOnClasses** (array[InfoOnClasses], required) - Información de las clases de los vuelos
+- **additionalFlightInfo** (array[AdditionalFlightInfo], required) - Información adicional de los vuelos
+
+### BasicFlightInfo (object)
+- **flightDetails** (object, required)
+    - **departureDate**: `2025-12-15` (string, required) - Fecha de salida
+    - **departureTime**: `06:45` (string, required) - Hora de salida
+    - **arrivalDate**: `2025-12-15` (string, required) - Fecha de llegada
+    - **arrivalTime**: `08:20` (string, required) - Hora de llegada
+- **departureLocation** (object, required)
+    - **cityAirport**: `LAX` (string, required) - Código IATA del aeropuerto de origen
+- **arrivalLocation** (object, required)
+    - **cityAirport**: `JFK` (string, required) - Código IATA del aeropuerto de destino
+- **marketingCompany** (object, required)
+    - **identifier**: `XX` (string, required) - Identificador de la compañía aérea
+- **operatingCompany** (object, required)
+    - **identifier**: `XX` (string, required) - Identificador de la compañía aérea
+- **flightIdentification** (object, required)
+    - **number**: `5678` (string, required) - Número de vuelo
+- **productTypeDetail** (object, required)
+    - **productIndicators** (array[string], required) - Indicadores del producto
+- **lineItemNumber**: `1` (number, required) - Número de línea
+- **administratingCompany** (object, required)
+    - **identifier**: `XX` (string, required) - Identificador de la compañía aérea
+- **adminFlightIdentification** (object, required)
+    - **number**: `3940` (string, required) - Número de vuelo
+
+### InfoOnClasses (object)
+- **classOfService** (object, required)
+    - **serviceClass**: `Y` (string, required) - Clase de servicio
+    - **availabilityStatus**: `4` (string, required) - Estado de disponibilidad
+    - **seatsAvailable**: `9` (number, required) - Número de asientos disponibles
+
+### AdditionalFlightInfo (object)
+- **flightDetails** (object, required)
+    - **typeOfAircraft**: `320` (string, required) - Tipo de aeronave
+    - **numberOfStops**: `0` (number, required) - Número de escalas
+    - **legDuration**: `0135` (string, required) - Duración del trayecto
+- **productFacilities** (array[object], required)
+    - **type**: `1A` (string, required) - Tipo de servicio proporcionado
