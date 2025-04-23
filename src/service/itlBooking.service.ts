@@ -1,5 +1,4 @@
 import database from '../database/infoSol.database';
-import { postFinishSessionAma } from '../externals/finishSessionAma.external';
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 import { Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../interfaces/interface.index';
 import { mapPaxes } from '../mappers/pasajeros.mapper';
@@ -82,7 +81,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
                         const firstFreeText = freeText && freeText[0] ? freeText[0] : '';
 
                         if (firstFreeText !== '' && firstFreeText === FREE_TEXT_AMA_ERROR) {
-                            await postFinishSessionAma( amadeusSession || '');
                             continue;
                         } else {
                             break;
@@ -93,7 +91,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
                 }
                 await finalizeBooking(itlBooking, amadeusSession || '');
             } else {
-                await postFinishSessionAma( amadeusSession || '');
             }
         }
     }
@@ -122,14 +119,12 @@ const handleFailedReservation = async (itlBooking: Booking, amadeusSession: stri
     const response = await finishBooking(itlBooking, amadeusSession);
     itlBooking.PNR = response?.data?.pnr || '';
     await database.establecerIncorrecto(itlBooking);
-    await postFinishSessionAma( amadeusSession || '');
 
     return itlBooking;
 };
 
 const finalizeBooking = async (itlBooking: Booking, amadeusSession: string) => {
     await database.establecerCorrecto(itlBooking);
-    await postFinishSessionAma( amadeusSession || '');
 
 };
 

@@ -1,6 +1,5 @@
 import { actualizarAmadeusSession, establecerCorrecto, establecerIncorrecto, startRegister } from '../database/infoSol.database';
 import { postAmadeusCommand } from '../externals/amadeusCommand.external';
-import { postFinishSessionAma } from '../externals/finishSessionAma.external';
 import { getAmadeus } from '../externals/ITLamadeus.external';
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 import { Adult, Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../interfaces/interface.index';
@@ -61,7 +60,6 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	} else {
 		await establecerIncorrecto(itlBooking);
 	}
-	await postFinishSessionAma(amaData.amadeussession);
 	return JSON.stringify(itlBooking);
 };
 

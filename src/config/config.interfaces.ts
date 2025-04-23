@@ -17,10 +17,12 @@ export interface Server {
 	ipv6: boolean;
 }
 
+
 export interface Datasource {
 	user: string;
-	connectionString: string;
-	poolMax: number;
+	port: number;
+	host: string;
+	database: string;
 }
 
 export interface amadeusParams {

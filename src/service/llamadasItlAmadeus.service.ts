@@ -1,4 +1,3 @@
-import { logger } from 'aea-logger';
 import { getGyms } from '../externals/gyms.external';
 import { getAmadeus } from '../externals/ITLamadeus.external';
 import { Adult, Booking, Child, Flight, ProcessFlight } from '../interfaces/interface.index';
@@ -185,7 +184,6 @@ export const finishBooking = async (itlBooking: Booking, amadeusSession: string 
 	try {
 		return await getAmadeus(itlBooking, amadeusSession);
 	} catch (error) {
-		logger.error('Error al finalizar la reserva:', error);
 		return false;
 	}
 };
@@ -199,7 +197,6 @@ const addPassengers = async (
 		const { data: response, headers } = await getAmadeus(passengers, amadeusSession);
 		return response ? { data: response, headers } : null;
 	} catch (error) {
-		logger.error('Error al obtener datos de pasajeros:', error);
 		throw error;
 	}
 };
@@ -291,7 +288,6 @@ export const processPassengers = async (
 
 		return { itlBooking, allOkInBookingProcess, newAmadeusSession };// devuelves la nueva pero que solo se habrá puesto si vienen niños
 	} catch (error) {
-		logger.error("Error en iterarPasajeros:", error);
 		throw error;
 	}
 };

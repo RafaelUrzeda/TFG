@@ -1,20 +1,22 @@
-import { logger } from "aea-logger";
 import fastify from "fastify";
 import * as process from "node:process";
 import conf from "./config/config";
-import * as db from "./database/interline.oracle.datasource";
+import * as db from "./database/internalTravel.postgre.datasource";
 import routes from "./routes";
 
 const init = async () => {
 	try {
 		await db.init({
 			user: conf.datasource.user,
-			connectionString: conf.datasource.connectionString,
-			password: process.env.comser_db_password || '',
-			poolMax: conf.datasource.poolMax
-		});
+			host: conf.datasource.host,
+			port: conf.datasource.port,
+			database: conf.datasource.database,
+			password: process.env["HuA6Tq3McQgPlN8ohS8unoPP485Kp8pr"],
+			ssl: {
+				rejectUnauthorized: true,
+			},
+		})
 	} catch (e) {
-		logger.error("app init - " + e);
 		process.exit(1);
 	}
 };
@@ -23,8 +25,8 @@ const build = () => {
 	const app = fastify();
 	// Routes
 	routes(app).catch((e) => {
-		logger.error(e);
 	});
 	return app;
 };
 export { build, init };
+

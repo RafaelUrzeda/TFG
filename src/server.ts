@@ -14,7 +14,6 @@ if (process.env["DD_SERVICE"]) {
   });
 }
 
-import { logger } from "aea-logger";
 import { FastifyListenOptions } from "fastify/types/instance";
 import * as figlet from "figlet";
 import { readFileSync } from "fs";
@@ -25,8 +24,7 @@ const pkj: { name: string; version: string } = JSON.parse(
   readFileSync("package.json", { encoding: "utf-8" }),
 );
 console.log(figlet.textSync("  " + pkj.name));
-logger.info("*".repeat(80));
-logger.info("Init App Version " + pkj.version);
+
 
 const start = async () => {
   try {
@@ -40,16 +38,11 @@ const start = async () => {
 
     server.listen(fastifyListenOptions, (e) => {
       if (!e) {
-        logger.info("App started on port: " + conf.server.port);
-        logger.info("Started App in " + (Date.now() - now) + " milliseconds");
-        logger.info("*".repeat(80));
       } else {
-        logger.error(e);
         process.exit(1);
       }
     });
   } catch (e) {
-    logger.error(e);
     process.exit(1);
   }
 };

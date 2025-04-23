@@ -1,10 +1,9 @@
-import { logger, operationalTracer } from "aea-logger";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ApiError } from "./apiError";
+import { CustomError } from "./customError";
 import { ErrorResponse } from "./errorResponse";
 import { UnexpectedError } from "./errors/unexpectedError";
 import { IFastifyError } from "./fastifyError";
-import { CustomError } from "./customError";
 
 export const ERROR_HANDLERS: {
   [error: string]: (res: FastifyReply, error: IFastifyError) => void;
@@ -20,29 +19,12 @@ export const ERROR_HANDLERS: {
     if (error instanceof ApiError) {
       const apiError = <ApiError>error;
 
-      operationalTracer.error(apiError.serviceName, {
-        request: apiError.request,
-        error: {
-          name: apiError.errorCode,
-          description: apiError.errorDescription,
-        },
-        statusCode: apiError.status,
-      });
-
       res
         .code(apiError.status)
         .send(new ErrorResponse(apiError.errorCode, apiError.message));
     } else {
       const anyError = new UnexpectedError();
 
-      operationalTracer.error(anyError.serviceName, {
-        request: anyError.request,
-        error: {
-          name: anyError.errorCode,
-          description: anyError.errorDescription,
-        },
-        statusCode: anyError.status,
-      });
 
       res.code(500).send(anyError);
     }
@@ -67,6 +49,5 @@ export const customErrorHandler = (
   const handler =
     ERROR_HANDLERS[error.name || error.constructor.name || error.code] ||
     ERROR_HANDLERS.DefaultError;
-  logger.error(error);
   return handler(res, error);
 };
