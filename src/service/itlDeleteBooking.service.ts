@@ -1,7 +1,8 @@
 
 
 const itlDeleteBookingService = async (locata: string, token: string) => {
-    //TODO: cambiar esto para que elimine una reserva de la base de datos
+    // Debería simplemente coger el localizador y lanzar una petición a un servicio de amadeus que es el encargado de eliminar la reserva
+    return "DELETED";
 };
 
 export { itlDeleteBookingService };

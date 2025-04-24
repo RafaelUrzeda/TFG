@@ -1,10 +1,13 @@
-import { Adult, Booking, Child, Flight } from "src/interfaces/jsonResponse.interface";
+import { executeQuery } from '../database/internalTravel.postgre.datasource';
 
 
-const getAmadeus = async (ITLBooking: Booking | Flight[] | Adult[] | Child[] | undefined, amadeusSession?: string): Promise<any> => {
-    
+const getAmadeus = async (idReserva: number | string): Promise<any> => {
+    const query = "SELECT amadeusbooking FROM ITL_RESERVAS_AMADEUS WHERE IDRESERVA = $1";
+    const values = [idReserva || ''];
+    const response = await executeQuery({ text: query, values });
+    return response.rows[0].amadeusbooking;
 
-    const response = {
+    const pete = {
         data: {
             pnr: {
                 "pnrHeader": {

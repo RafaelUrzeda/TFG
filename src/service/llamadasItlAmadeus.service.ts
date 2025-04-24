@@ -2,33 +2,29 @@ import { getGyms } from '../externals/gyms.external';
 import { getAmadeus } from '../externals/ITLamadeus.external';
 import { Adult, Booking, Child, Flight, ProcessFlight } from '../interfaces/interface.index';
 
+let idReserva: string | number = 0;
 // main function in add flight process
 export const processAndAddFlight = async (itlBooking: Booking): Promise<ProcessFlight> => {
 	let response: ProcessFlight | Promise<ProcessFlight>;
-	let amadeusSession: string | undefined;
 	let allOkInBookingProcess = true;
 	let contador = 0;
-
+	idReserva = itlBooking.idReserva || 0;
 	for (const flight of itlBooking.flights || []) {
-		console.log('flight', flight);
 		flight.amadeusErrorCode = [];
 		flight.gymsResponse = {};
-
-        const resultado: { successCallToExternalServices: boolean; allOkInBookingProcess: boolean; amadeusSession: string | undefined; errorCode: string; flight: Flight; gymsResponse?: any } =
-            await processFlight(flight, amadeusSession, contador);
+        const resultado: { successCallToExternalServices: boolean; allOkInBookingProcess: boolean; errorCode: string; flight: Flight; gymsResponse?: any } =
+            await processFlight(flight, contador);
 
 		allOkInBookingProcess = resultado.allOkInBookingProcess;
 
-		amadeusSession = resultado.amadeusSession;
-		console.log('resultado', resultado);
         if (!allOkInBookingProcess) {
-            return response = processFail(itlBooking, amadeusSession);
+            return response = processFail(itlBooking);
         }
 
 		contador++;
 	};
-
-	response = { itlBooking, amadeusSession, allOkInBookingProcess }
+	console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',);
+	response = { itlBooking, allOkInBookingProcess }
 
 	return response;
 };
@@ -36,7 +32,7 @@ export const processAndAddFlight = async (itlBooking: Booking): Promise<ProcessF
 // Variables Generales
 const LEADING_ZERO = /^0+/;
 const FREE_TEXT_AMA_ERROR = 'TICKET RECONCILIATION NEEDED';
-const GYMS_CALL = 'S';
+const GYMS_CALL = 'NO';
 const FORCE_IS_POSSIBLE_YES = 'S';
 const FORCE_IS_POSSIBLE_NO = 'N';
 const DEFAULT_ERROR_CODE = 'N/A';
@@ -46,11 +42,10 @@ const DEFAULT_ERROR_OWNER = 'N/A';
 
 
 // Procesar cada flight individualmente
-const processFlight = async (flight: Flight, amadeusSession: string | undefined, contador: number) => {
+const processFlight = async (flight: Flight, contador: number) => {
     let response: {
         successCallToExternalServices: boolean;
         allOkInBookingProcess: boolean;
-        amadeusSession: string | undefined;
         errorCode: string;
         flight: Flight;
     }
@@ -58,50 +53,49 @@ const processFlight = async (flight: Flight, amadeusSession: string | undefined,
         // Verificamos si el campo forceIsPossible existe en la respuesta
         const bloqueo = await getGyms(flight) || { forceIsPossible: FORCE_IS_POSSIBLE_NO, gyms: {} };
         // Verificamos si el campo forceIsPossible existe, si no, lo creamos con valor 'N'
-        if (bloqueo.gyms) {
+        if (bloqueo) {
             flight.gymsResponse = { gyms: "No se ha podido obtener la respuesta de Gyms" };
         } else {
             flight.gymsResponse = bloqueo;
         }
-        if (bloqueo.forceIsPossible === FORCE_IS_POSSIBLE_YES) {
-            const resultadoAmadeus = await llamarAmadeus(flight, amadeusSession, contador);
+        if (bloqueo) {
+            const resultadoAmadeus = await llamarAmadeus(flight, contador);
+			console.log('resultadoAmadeus', resultadoAmadeus);
             if (!resultadoAmadeus.successCallToExternalServices) {
-                response = await intentarConCodigoBloqueo(flight, resultadoAmadeus.amadeusSession, contador);
+                response = await intentarConCodigoBloqueo(flight, contador);
             } else {
                 response = { ...resultadoAmadeus, flight };
             }
         } else {
-            response = await intentarConCodigoBloqueo(flight, amadeusSession, contador);
+            response = await intentarConCodigoBloqueo(flight, contador);
         }
     } else {
-        response = await intentarConCodigoBloqueo(flight, amadeusSession, contador);
+        response = await intentarConCodigoBloqueo(flight, contador);
     }
     return response;
 };
 
 // Llamar al servicio Amadeus
-const llamarAmadeus = async (flight: Flight, amadeusSession: string | undefined, contador: number) => {
-	const { data: response, headers } = await getAmadeus({ flights: [flight] }, amadeusSession);
+
+const llamarAmadeus = async (flight: Flight, contador: number) => {
+	const response = await getAmadeus(idReserva);
 
     let successCallToExternalServices = false;
     let allOkInBookingProcess = true;
     let errorCode = '';
 
 	if (response) {
-		if (headers.amadeussession) {
-			amadeusSession = headers.amadeussession;
-		}
 
-		const errorFreeText = syncFlightIds(flight, response.pnr);
+		const errorFreeText = syncFlightIds(flight, response);
 		successCallToExternalServices = true;
-		if (!hasError(errorFreeText)) {
+		if (hasError(errorFreeText)) {
 			allOkInBookingProcess = false;
 			errorCode = errorFreeText;
 			flight.amadeusErrorCode?.push({ amadeusErrorCode: errorCode, statusCode: flight.statusCode });
 		}
 	}
 
-	return { successCallToExternalServices, allOkInBookingProcess, amadeusSession, errorCode };
+	return { successCallToExternalServices, allOkInBookingProcess, errorCode };
 };
 // Actualizar flight con los datos de Amadeus
 const syncFlightIds = (flight: Flight, Pnr: any) => {
@@ -129,23 +123,22 @@ const syncFlightIds = (flight: Flight, Pnr: any) => {
 
 // TODO: puede que el error este aqui
 // Intentar con códigos de bloqueo 
-const intentarConCodigoBloqueo = async (flight: Flight, amadeusSession: string | undefined, contador: number) => {
+const intentarConCodigoBloqueo = async (flight: Flight, contador: number) => {
 	let errorCode = '';
-	let response = { successCallToExternalServices: false, allOkInBookingProcess: false, amadeusSession, errorCode, flight };
+	let response = { successCallToExternalServices: false, allOkInBookingProcess: false,  errorCode, flight };
 
 
 	for (const codigoBloqueo of flight.codigoBloqueo) {
 		flight.statusCode = codigoBloqueo?.toString();
-		const { successCallToExternalServices, amadeusSession: nuevaSesion, errorCode: newErrorCode } = await llamarAmadeus(flight, amadeusSession, contador);
+		const { successCallToExternalServices, errorCode: newErrorCode } = await llamarAmadeus(flight, contador);
 
-		amadeusSession = nuevaSesion;
 
 		if (newErrorCode) {
 			errorCode = newErrorCode;
 		}
 
 		if (successCallToExternalServices) {
-			response = { successCallToExternalServices: true, allOkInBookingProcess: true, amadeusSession, errorCode: '', flight };
+			response = { successCallToExternalServices: true, allOkInBookingProcess: true, errorCode: '', flight };
 			break;
 		}
 	}
@@ -160,11 +153,11 @@ const hasError = (freeText: string | undefined): boolean => {
 };
 
 // Process Amadeus Error
-export const processFail = async (itlBooking: Booking, amadeusSession: string | undefined): Promise<ProcessFlight> => {
+export const processFail = async (itlBooking: Booking, ): Promise<ProcessFlight> => {
 	const newItlBooking: Booking = {};
 	newItlBooking.ignorePNR = true;
-	await getAmadeus(newItlBooking, amadeusSession);
-	return { itlBooking, amadeusSession, allOkInBookingProcess: false };
+	await getAmadeus(idReserva);
+	return { itlBooking, allOkInBookingProcess: false };
 };
 
 // Format date to correct format (spanish)
@@ -180,9 +173,9 @@ const formatDate = (dateStr: string, timeStr: string): string => {
 }
 
 
-export const finishBooking = async (itlBooking: Booking, amadeusSession: string | undefined) => {
+export const finishBooking = async (itlBooking: Booking) => {
 	try {
-		return await getAmadeus(itlBooking, amadeusSession);
+		return await getAmadeus(idReserva);
 	} catch (error) {
 		return false;
 	}
@@ -190,12 +183,11 @@ export const finishBooking = async (itlBooking: Booking, amadeusSession: string 
 
 const addPassengers = async (
 	passengers: Adult[] | Child[] | Booking,
-	amadeusSession: string | undefined
 ) => {
+	// eslint-disable-next-line no-useless-catch
 	try {
-
-		const { data: response, headers } = await getAmadeus(passengers, amadeusSession);
-		return response ? { data: response, headers } : null;
+		const response= await getAmadeus(idReserva);
+		return response;
 	} catch (error) {
 		throw error;
 	}
@@ -208,7 +200,7 @@ export const processAndAddPaxes = (
 	type: "adults" | "childs",
 ) => {
 	let allOkInBookingProcess = true;
-	const pnr = data.pnr;
+	const pnr = data;
 	const passengers = itlBooking[type];
 	if (!passengers || passengers.length === 0) {
 		console.warn(`No se encontraron pasajeros para ${type}.`);
@@ -256,18 +248,14 @@ export const processAndAddPaxes = (
 
 export const processPassengers = async (
 	itlBooking: Booking,
-	amadeusSession: string | undefined
 ) => {
+    // eslint-disable-next-line no-useless-catch
     try {
-        let newAmadeusSession: string = '';
         let allOkInBookingProcess = true;
+		idReserva = itlBooking.idReserva || 0;
         if (itlBooking.adults && itlBooking.adults.length > 0) {
-            const response = await addPassengers({ adults: itlBooking.adults }, amadeusSession);
-            const result = processAndAddPaxes(itlBooking, response?.data, "adults");
-			if (response) {
-				const { data, headers } = response;
-				newAmadeusSession = headers.amadeussession;
-			}
+            const response = await addPassengers({ adults: itlBooking.adults });
+            const result = processAndAddPaxes(itlBooking, response, "adults");
             allOkInBookingProcess = allOkInBookingProcess && result.allOkInBookingProcess;
         }
 
@@ -276,17 +264,16 @@ export const processPassengers = async (
                 adults: itlBooking.adults,
                 childs: itlBooking.childs
             };
-            const passengerResponse = await addPassengers(filteredBooking, amadeusSession);
+            const passengerResponse = await addPassengers(filteredBooking);
             if (passengerResponse) {
                 const { data, headers } = passengerResponse;
-                newAmadeusSession = headers.amadeussession;
 
 				const result = processAndAddPaxes(itlBooking, data, "childs");
 				allOkInBookingProcess = allOkInBookingProcess && result.allOkInBookingProcess;
 			}
 		}
 
-		return { itlBooking, allOkInBookingProcess, newAmadeusSession };// devuelves la nueva pero que solo se habrá puesto si vienen niños
+		return { itlBooking, allOkInBookingProcess };// devuelves la nueva pero que solo se habrá puesto si vienen niños
 	} catch (error) {
 		throw error;
 	}

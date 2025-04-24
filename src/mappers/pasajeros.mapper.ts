@@ -12,8 +12,6 @@ const DELETE_NUMBERS_AND_SPACES = /[^\w\s]|[\d]/gi;
 const DELETE_UNNECESSARY_SPACES = /\s+/g;
 
 export const mapPaxes = (pasajeros: PaxesDB[], itlBooking: Booking) => {
-    console.log('Mapping passengers...');
-    console.log('Passenger data:', pasajeros);
     const adults: Adult[] = [];
     const children: Child[] = [];
 

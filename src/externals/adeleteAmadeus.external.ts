@@ -1,7 +1,7 @@
-import { deletePnrElements } from "../interfaces/interface.index";
 
-export const cancelPNR = async (data: deletePnrElements, amadeusSession: string, token: string): Promise<any>  => {
-   //TODO: cambiar esto por una query que elimine la reserva de la base de datos
+export const cancelPNR = async (data: string): Promise<any>  => {
+   // Esto debería llamar a un servicio de amadeus que borre la reserva, pero no hará nada
+   return true;
 };
 
 

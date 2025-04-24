@@ -1,4 +1,3 @@
-import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 import { Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../interfaces/interface.index';
 import { mapPaxes } from '../mappers/pasajeros.mapper';
 import { mapContactInformation, mapRF, mapResidentDiscount, mapSsrToRoot } from '../mappers/ssr.mapper';
@@ -8,15 +7,17 @@ import { buscaAsiento } from './asientos.service';
 import { dataBooking, dataFlight, dataPaxes, dataSsr } from './database.service';
 import { finishBooking, processAndAddFlight, processPassengers } from './llamadasItlAmadeus.service';
 
+
+let idReserva: string | number = 0;
 const fullItlBookingService = async (idBooking: number): Promise<string> => {
     // inizialize variables
     let itlBooking: Booking = {} as Booking;
-    let newAmadeusSession: string | undefined = '';
     let response;
     itlBooking.warnings = [];
     itlBooking.errors = [];
 
     // Start the register in database
+    idReserva = idBooking.toString();
     itlBooking.idReserva = idBooking.toString();
 
     // get all data from database
@@ -26,66 +27,40 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
     mapMinimalData(itlBooking, paxData, elementsData, flightData, idBooking);
 
     // Add the flights to the booking
-    let { itlBooking: updatedItlBooking, amadeusSession, allOkInBookingProcess } = await processAndAddFlight(itlBooking);
+    let { itlBooking: updatedItlBooking, allOkInBookingProcess } = await processAndAddFlight(itlBooking);
     itlBooking = updatedItlBooking;
-    itlBooking.amadeussession = amadeusSession;
-
     if (allOkInBookingProcess === false) {
         return JSON.stringify(itlBooking);
     }
 
     // Add the passengers to the booking
-    const addPassengersResult = await processPassengers(itlBooking, amadeusSession);
-    ({ itlBooking: updatedItlBooking, allOkInBookingProcess, newAmadeusSession } = addPassengersResult);
-    if (newAmadeusSession !== '') {
-        amadeusSession = newAmadeusSession;
-    }
+    const addPassengersResult = await processPassengers(itlBooking);
+    ({ itlBooking: updatedItlBooking, allOkInBookingProcess } = addPassengersResult);
+
     itlBooking = updatedItlBooking;
-    itlBooking.amadeussession = amadeusSession;
     itlBooking.tkok = true;
-    
+
     if (!allOkInBookingProcess) {
-        itlBooking = await handleFailedReservation(itlBooking, amadeusSession || '');
+        console.log('Error in booking process, handling failed reservation...');
+        itlBooking = await handleFailedReservation(itlBooking || '');
     } else {
         // Finish booking with minimal data to get Locata
-        response = await finishBooking(itlBooking, amadeusSession);
-        const finalizada = response.data.pnr ? true : false;
+        response = await finishBooking(itlBooking);
+        const finalizada = response ? true : false;
+        console.log('Finalizada:', finalizada);
 
         // If finish process failed, handle the error
         if (!finalizada) {
-            itlBooking = await handleFailedReservation(itlBooking, amadeusSession || '');
+            itlBooking = await handleFailedReservation(itlBooking || '');
         } else {
-            itlBooking.PNR = response?.data?.pnr || '';
+            itlBooking.PNR = response|| '';
             itlBooking.idSolicitud = bookingData.IDSOLICITUD;
-            itlBooking.localizador = response?.data?.pnr?.pnrHeader[0].reservationInfo?.reservation?.[0]?.controlNumber || '';
 
             // if the booking has locata, add ssr to the booking
-            if (itlBooking.localizador) {
-                await buscaAsiento(itlBooking);
-                mapSsrToRoot(elementsData, itlBooking);
-                itlBooking = mapResidentDiscount(elementsData, itlBooking);
-                itlBooking.contactInformation = [];
-                try {
-                    for (let i = 0; i < 2; i++) {
-                        const booking = await getAmadeusPNR(itlBooking.localizador || '', '', amadeusSession || '');
-                        amadeusSession = booking?.headers?.amadeussession;
-                        response = await finishBooking(itlBooking, amadeusSession);
-                        itlBooking.PNR = response?.data?.pnr || '';
-                        const generalErrorInfo = response?.data?.pnr?.generalErrorInfo;
-                        const freeText = generalErrorInfo && generalErrorInfo[0]?.errorWarningDescription?.freeText;
-                        const firstFreeText = freeText && freeText[0] ? freeText[0] : '';
-
-                        if (firstFreeText !== '' && firstFreeText === FREE_TEXT_AMA_ERROR) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error al añadir los ssr');
-                }
-            } else {
-            }
+            await buscaAsiento(itlBooking, idReserva);
+            mapSsrToRoot(elementsData, itlBooking);
+            itlBooking = mapResidentDiscount(elementsData, itlBooking);
+            itlBooking.contactInformation = [];
         }
     }
     itlBooking = mapContactInformation(elementsData, itlBooking);
@@ -108,15 +83,12 @@ const mapMinimalData = (itlBooking: Booking, paxData: PaxesDB[], elementsData: E
     mapRF(elementsData, itlBooking);
 };
 
-const handleFailedReservation = async (itlBooking: Booking, amadeusSession: string): Promise<Booking> => {
+const handleFailedReservation = async (itlBooking: Booking): Promise<Booking> => {
     itlBooking.ignorePNR = true;
-    const response = await finishBooking(itlBooking, amadeusSession);
+    const response = await finishBooking(itlBooking);
     itlBooking.PNR = response?.data?.pnr || '';
 
     return itlBooking;
 };
-
-const FREE_TEXT_AMA_ERROR = 'SIMULTANEOUS CHANGES TO PNR - USE WRA/RT TO PRINT OR IGNORE';
-
 export { fullItlBookingService };
 

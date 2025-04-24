@@ -4,7 +4,7 @@ import { getSeatMap } from "../externals/seatMap.external";
 import { Booking, SeatMapRequest, SeatMapResponse } from "../interfaces/interface.index";
 import { nuevaFila, nuevoAsiento } from "../mappers/asientos.mapper";
 
-export const buscaAsiento = async (ITLBooking: Booking | undefined, asignaAsientos?: SeatMapRequest) => {
+export const buscaAsiento = async (ITLBooking: Booking | undefined, idFlight: string, asignaAsientos?: SeatMapRequest) => {
     let mapaAsientos;
     if (ITLBooking !== undefined) {
         const totalPasajeros = ITLBooking.flights && ITLBooking.flights.length > 0 ? ITLBooking.flights[0].ticketsNumber : 0;
@@ -14,7 +14,7 @@ export const buscaAsiento = async (ITLBooking: Booking | undefined, asignaAsient
                 let pasajeroIndex = 0;
                 if (vuelo.reservarAsientos === 'S') {
                     try {
-                        mapaAsientos = await getSeatMap(vuelo);
+                        mapaAsientos = await getSeatMap(vuelo, idFlight);
                     } catch (error) {
                         const err = error as { response?: { data?: { statusCode?: number, message?: string } } };
                         ITLBooking.warnings = ITLBooking.warnings || [];
@@ -72,7 +72,7 @@ export const buscaAsiento = async (ITLBooking: Booking | undefined, asignaAsient
             customSeats: []
         };
         try {
-            mapaAsientos = await getSeatMap(undefined, asignaAsientos);
+            mapaAsientos = await getSeatMap(undefined, idFlight , asignaAsientos);
             if (mapaAsientos) {
                 controlMapas.mapaDisponible = true;
                 response.seatMap = mapaAsientos;

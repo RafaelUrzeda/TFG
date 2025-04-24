@@ -7,6 +7,7 @@ export interface SeatMapRequest {
     cabinClass?: string;
     selectSeat: boolean;
     selectSeatMapParams?: selectSeatParams;
+    idReserva?: string;
 }
 
 export interface selectSeatParams {

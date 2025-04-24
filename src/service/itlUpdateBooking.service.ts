@@ -1,4 +1,3 @@
-import { postAmadeusCommand } from '../externals/amadeusCommand.external';
 import { getAmadeus } from '../externals/ITLamadeus.external';
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 import { Adult, Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../interfaces/interface.index';
@@ -8,6 +7,8 @@ import { mapDataFlightToMultiSegmentRequest } from '../mappers/vuelos.mapper';
 import { dataBooking, dataFlight, dataPaxes, dataSsr } from './database.service';
 import { finishBooking } from './llamadasItlAmadeus.service';
 import { deleteElements } from './procesaPnr.service';
+
+let IdReserva: number | string = 0;
 
 const fullItlUpdateBookingService = async (idReserva: number, token: string, localizador: string): Promise<string> => {
 	const amaData: any = {
@@ -21,6 +22,7 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 
 	const [bookingData, paxes, elements, flight] = await getDataBaseData(idReserva);
 
+	IdReserva = idReserva ;
 	itlBooking.idReserva = idReserva.toString();
 	itlBooking.idSolicitud = bookingData.IDSOLICITUD;
 
@@ -40,20 +42,15 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	syncPassengerIds(itlBooking, amaData.pnr);
 
 	// delete elements from pnr
-	const responseDeletedElements = await deleteElements(amaData.pnr, amaData.amadeussession, token);
-	amaData.amadeussession = responseDeletedElements.headers.amadeussession;
+	const responseDeletedElements = await deleteElements(amaData.pnr);
+	amaData.amadeussession = responseDeletedElements;
 
 	// add elements to booking object	
 	addElementsToBookingObject(itlBooking, elements);
 
 	itlBooking.tkok = true;
-	const booking = await finishBooking(itlBooking, amaData.amadeussession);
-	itlBooking.PNR = booking?.data?.pnr || '';
-
-	if (booking.headers.amadeussession) {
-		itlBooking.localizador = localizador;
-		itlBooking.amadeussession = amaData.amadeussession;
-	}
+	const booking = await finishBooking(itlBooking);
+	itlBooking.PNR = booking || '';
 	return JSON.stringify(itlBooking);
 };
 
@@ -67,13 +64,13 @@ const addDataToBooking = (itlBooking: Booking, elements: ElementsDB[], paxes: Pa
 const getPNR = async (amaData: any) => {
 	let response;
 	if (amaData.amadeussession !== null) {
-		response = await getAmadeusPNR(amaData.locata, amaData.token, amaData.amadeussession);
+		response = await getAmadeusPNR(amaData.locata);
 	} else {
-		response = await getAmadeusPNR(amaData.locata, amaData.token);
+		response = await getAmadeusPNR(amaData.locata);
 	}
-	amaData.pnr = response.data;
-	amaData.headers = response.headers;
-	amaData.amadeussession = response.headers.amadeussession;
+	amaData.pnr = response;
+	amaData.headers = response;
+	amaData.amadeussession = response;
 }
 
 export const getDataBaseData = async (idBooking: number): Promise<[BookingData, PaxesDB[], ElementsDB[], FlightDB[]]> => {
@@ -101,24 +98,24 @@ export const sanitizeAmadeusErrors = async (amaData: any) => {
 	const newItlBooking: Booking = {};
 	newItlBooking.ignorePNR = true;
 
-	const response = await getAmadeus(newItlBooking, amaData.amadeussession);
-	amaData.amadeussession = response?.headers.amadeussession;
+	const response = await getAmadeus(IdReserva);
+	amaData.amadeussession = response;
 };
 
 const executeCommandList = async (nuCommands: string[], token: string, amaData: any): Promise<any> => {
-	for (let i = 0; i < nuCommands.length; i++) {
-		const command = nuCommands[i];
-		const response = await postAmadeusCommand(command, token, amaData.amadeussession);
-		amaData.amadeussession = response?.headers.amadeussession || '';
-	}
+	// for (let i = 0; i < nuCommands.length; i++) {
+	// 	const command = nuCommands[i];
+	// 	const response = await postAmadeusCommand(command, token, amaData.amadeussession);
+	// 	amaData.amadeussession = response?.headers.amadeussession || '';
+	// }
 
-	const rfCommand = "RF Updated Name Interline API"
-	const rfResponse = await postAmadeusCommand(rfCommand, token, amaData.amadeussession);
-	amaData.amadeussession = rfResponse?.headers.amadeussession
+	// const rfCommand = "RF Updated Name Interline API"
+	// const rfResponse = await postAmadeusCommand(rfCommand, token, amaData.amadeussession);
+	// amaData.amadeussession = rfResponse?.headers.amadeussession
 
-	const etCommand = "ET"
-	const etResponse = await postAmadeusCommand(etCommand, token, amaData.amadeussession);
-	amaData.amadeussession = etResponse?.headers.amadeussession
+	// const etCommand = "ET"
+	// const etResponse = await postAmadeusCommand(etCommand, token, amaData.amadeussession);
+	// amaData.amadeussession = etResponse?.headers.amadeussession
 };
 
 const addElementsToBookingObject = (itlBooking: Booking, elementsData: ElementsDB[]) => {

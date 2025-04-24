@@ -1,10 +1,11 @@
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 
-const itlGetPnrService = async (locata: string, token: string) => {
+const itlGetPnrService = async (locata: string) => {
         
-    const response = await getAmadeusPNR(locata, token);
+    const response = await getAmadeusPNR(locata);
 
     return response.data;
 }
 
 export { itlGetPnrService };
+

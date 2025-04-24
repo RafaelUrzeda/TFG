@@ -1,7 +1,7 @@
 import { cancelPNR } from "../externals/adeleteAmadeus.external";
 import { cancelElements, deletePnrElements, PaxesDB } from "../interfaces/interface.index";
 
-export const deleteElements = async (pnrData: any, amadeusSession: string, token: string) => {
+export const deleteElements = async (pnrData: any) => {
 
     // Condiciones para eliminar elementos
     const conditions = [
@@ -42,7 +42,7 @@ export const deleteElements = async (pnrData: any, amadeusSession: string, token
         cancelElements: cancelElements
     };
     if (cancelElements.length > 0) {
-        const response =  await cancelPNR(result, amadeusSession, token);
+        const response =  await cancelPNR('');
         return response;
     }
 };
@@ -93,6 +93,6 @@ export const deletePassengers = async (
 
     // Llamar a la función de cancelación
     if (cancelPassengersList.length > 0) {
-        await cancelPNR(result, amadeusSession, token);
+        await cancelPNR('');
     }
 };

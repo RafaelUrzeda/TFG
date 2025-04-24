@@ -1,4 +1,7 @@
+import { executeQuery } from '../database/internalTravel.postgre.datasource';
 
-export const getAmadeusPNR = async (localizador: string, token: string, amadeussession?: string): Promise<any> => {
-	//TODO: cambiar esto por una query que busque la reserva en la base de datos
+export const getAmadeusPNR = async (localizador: string): Promise<any> => {
+	const query = "SELECT * FROM ITL_RESERVAS_AMADEUS WHERE IDRESERVA = $1";
+    const values = [localizador || ''];
+    return (await executeQuery({ text: query, values })).rows[0].amadeusbooking || null;
 };
