@@ -13,19 +13,19 @@ export const mapDataFlightToMultiSegmentRequest = (itlBooking: Booking, flightDa
 	itlBooking.flights = flightData.map((flight) => {
 		return {
 			idReserva: idReserva ? idReserva.toString() : undefined,
-			id: flight.NVUELO,
-			seqser: parseInt(flight.SEQSER),
-			airportCodeOrigin: flight.APTDEP,
-			airportCodeDestination: flight.APTARR,
-			departureDate: isoDateToSpanishFormat(flight.TIMDEP),
-			flightNumber: flight.NUMFLT,
-			cabinClass: flight.CLASE,
-			companyId: flight.CIAAEREA,
-			statusCode: flight.CODIGOBLOQUEOGYMS,
-			ticketsNumber: flight.PASAJEROS,
-			llamadaGyms: flight.CONSULTARGYMS,
-			codigoBloqueo: [flight.CODIGOBLOQUEO1, flight.CODIGOBLOQUEO2, flight.CODIGOBLOQUEO3].filter(codigo => codigo) as unknown as codigosBloqueo[], //TODO the what
-			reservarAsientos: flight.RESERVARASIENTOS
+			id: flight.nvuelo,
+			seqser: parseInt(flight.seqser),
+			airportCodeOrigin: flight.aptdep,
+			airportCodeDestination: flight.aptarr,
+			departureDate: isoDateToSpanishFormat(flight.timdep),
+			flightNumber: flight.numflt,
+			cabinClass: flight.clase,
+			companyId: flight.ciaaerea,
+			statusCode: flight.codigobloqueogyms,
+			ticketsNumber: flight.pasajeros,
+			llamadaGyms: flight.consultargyms,
+			codigoBloqueo: [flight.codigobloqueo1, flight.codigobloqueo2, flight.codigobloqueo3].filter(codigo => codigo) as unknown as codigosBloqueo[], //TODO the what
+			reservarAsientos: flight.reservarasientos
 		};
 	});
 

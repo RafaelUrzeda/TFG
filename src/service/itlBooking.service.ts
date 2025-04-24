@@ -1,4 +1,3 @@
-import database from '../database/infoSol.database';
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
 import { Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../interfaces/interface.index';
 import { mapPaxes } from '../mappers/pasajeros.mapper';
@@ -10,7 +9,6 @@ import { dataBooking, dataFlight, dataPaxes, dataSsr } from './database.service'
 import { finishBooking, processAndAddFlight, processPassengers } from './llamadasItlAmadeus.service';
 
 const fullItlBookingService = async (idBooking: number): Promise<string> => {
-
     // inizialize variables
     let itlBooking: Booking = {} as Booking;
     let newAmadeusSession: string | undefined = '';
@@ -19,7 +17,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
     itlBooking.errors = [];
 
     // Start the register in database
-    await database.startRegister(idBooking);
     itlBooking.idReserva = idBooking.toString();
 
     // get all data from database
@@ -32,7 +29,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
     let { itlBooking: updatedItlBooking, amadeusSession, allOkInBookingProcess } = await processAndAddFlight(itlBooking);
     itlBooking = updatedItlBooking;
     itlBooking.amadeussession = amadeusSession;
-    await database.actualizarAmadeusSession(idBooking, amadeusSession || '');
 
     if (allOkInBookingProcess === false) {
         return JSON.stringify(itlBooking);
@@ -65,7 +61,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
 
             // if the booking has locata, add ssr to the booking
             if (itlBooking.localizador) {
-                finalizeBooking(itlBooking, amadeusSession || '');
                 await buscaAsiento(itlBooking);
                 mapSsrToRoot(elementsData, itlBooking);
                 itlBooking = mapResidentDiscount(elementsData, itlBooking);
@@ -89,7 +84,6 @@ const fullItlBookingService = async (idBooking: number): Promise<string> => {
                 } catch (error) {
                     console.error('Error al añadir los ssr');
                 }
-                await finalizeBooking(itlBooking, amadeusSession || '');
             } else {
             }
         }
@@ -118,14 +112,8 @@ const handleFailedReservation = async (itlBooking: Booking, amadeusSession: stri
     itlBooking.ignorePNR = true;
     const response = await finishBooking(itlBooking, amadeusSession);
     itlBooking.PNR = response?.data?.pnr || '';
-    await database.establecerIncorrecto(itlBooking);
 
     return itlBooking;
-};
-
-const finalizeBooking = async (itlBooking: Booking, amadeusSession: string) => {
-    await database.establecerCorrecto(itlBooking);
-
 };
 
 const FREE_TEXT_AMA_ERROR = 'SIMULTANEOUS CHANGES TO PNR - USE WRA/RT TO PRINT OR IGNORE';

@@ -12,16 +12,17 @@ const DELETE_NUMBERS_AND_SPACES = /[^\w\s]|[\d]/gi;
 const DELETE_UNNECESSARY_SPACES = /\s+/g;
 
 export const mapPaxes = (pasajeros: PaxesDB[], itlBooking: Booking) => {
-
+    console.log('Mapping passengers...');
+    console.log('Passenger data:', pasajeros);
     const adults: Adult[] = [];
     const children: Child[] = [];
 
     const adultMap: Record<number, Adult> = {};
 
     pasajeros.forEach(pax => {
-        const seqPax = Number(pax.NPAX);
+        const seqPax = Number(pax.npax);
 
-        switch (pax.TIPOPASAJERO) {
+        switch (pax.tipopasajero) {
 
             case PAX_TYPES.ADULT: {
                 const adult = mapAdult(pax);
@@ -35,7 +36,7 @@ export const mapPaxes = (pasajeros: PaxesDB[], itlBooking: Booking) => {
                 break;
 
             case PAX_TYPES.INFANT: {
-                const associatedAdult = adultMap[Number(pax.PAXASOC)];
+                const associatedAdult = adultMap[Number(pax.paxasoc)];
                 if (associatedAdult) {
                     associatedAdult.hasInfants = true;
 
@@ -44,9 +45,9 @@ export const mapPaxes = (pasajeros: PaxesDB[], itlBooking: Booking) => {
                         associatedAdult.firstName,
                         associatedAdult.surname.split(' ')[0] || '', // Primer apellido del adulto
                         associatedAdult.surname.split(' ')[1] || '', // Segundo apellido del adulto
-                        pax.NOMBRE,
-                        pax.APELLIDO1,
-                        pax.APELLIDO2 || ''
+                        pax.nombre,
+                        pax.apellido1,
+                        pax.apellido2 || ''
                     );
 
                     // Actualizamos nombres y apellidos del adulto con los adaptados
@@ -78,10 +79,10 @@ export const mapPaxes = (pasajeros: PaxesDB[], itlBooking: Booking) => {
 };
 
 const mapCommonFields = (data: PaxesDB) => ({
-    nombreAmadeus: data.NOMBREAMADEUS,
-    id: data.NPAX?.toString(),
-    firstName: normalizeCharacters(`${data.NOMBRE} ${data.TRATAMIENTO}`),
-    surname: normalizeCharacters(`${data.APELLIDO1} ${data.APELLIDO2 || ''}`.trim()),
+    nombreAmadeus: data.nombreamadeus,
+    id: data.npax?.toString(),
+    firstName: normalizeCharacters(`${data.nombre} ${data.tratamiento}`),
+    surname: normalizeCharacters(`${data.apellido1} ${data.apellido2 || ''}`.trim()),
 });
 
 const mapAdult = (data: PaxesDB): Adult => ({
@@ -92,12 +93,12 @@ const mapAdult = (data: PaxesDB): Adult => ({
 
 const mapChild = (data: PaxesDB): Child => ({
     ...mapCommonFields(data),
-    dateOfBirth: data.DATNAC ? reverseDate(data.DATNAC) : ''
+    dateOfBirth: data.datnac ? reverseDate(data.datnac) : ''
 });
 
 const mapInfant = (data: PaxesDB): InfantInformation => ({
     ...mapCommonFields(data),
-    dateOfBirth: data.DATNAC ? reverseDate(data.DATNAC) : ''
+    dateOfBirth: data.datnac ? reverseDate(data.datnac) : ''
 });
 
 

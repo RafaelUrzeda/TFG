@@ -38,47 +38,47 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
 
     ssrData.forEach(data => {
         const {
-            TIPOELEMENTO,
-            CODSSR,
-            TXTSSR,
-            NUMLEG,
-            NUMPAX,
-            CIASSR,
-            ACCSSR
+            tipoelemento,
+            codssr,
+            txtssr,
+            numleg,
+            numpax,
+            ciassr,
+            accssr,
         } = data;
 
-        switch (TIPOELEMENTO) {
+        switch (tipoelemento) {
             case CTCE:
             case CTCM:
             case SR: {
-                if (CODSSR === DOCS) {
+                if (codssr === DOCS) {
                     const ssr: SSR = {
-                        type: TIPOELEMENTO,
-                        freeText: TXTSSR.normalize('NFD').replace(DIACRITICS_REGEX, "").replace('-ms-', '-f-'),
+                        type: tipoelemento,
+                        freeText: txtssr.normalize('NFD').replace(DIACRITICS_REGEX, "").replace('-ms-', '-f-'),
                     };
 
-                    if (ACCSSR) {
+                    if (accssr) {
                         ssr.status = {
-                            type: ACCSSR,
+                            type: accssr,
                         };
                     }
 
-                    if (NUMLEG) {
-                        if (NUMLEG !== 'P') {
-                            ssr.flightsReference = [{ id: NUMLEG }];
+                    if (numleg) {
+                        if (numleg !== 'P') {
+                            ssr.flightsReference = [{ id: numleg }];
                         }
                     }
 
-                    if (NUMPAX) {
-                        ssr.paxReference = [{ id: NUMPAX }];
+                    if (numpax) {
+                        ssr.paxReference = [{ id: numpax }];
                     }
 
-                    if (CIASSR) {
-                        ssr.companyId = CIASSR;
+                    if (ciassr) {
+                        ssr.companyId = ciassr;
                     }
 
-                    if (CODSSR) {
-                        ssr.type = CODSSR;
+                    if (codssr) {
+                        ssr.type = codssr;
                     }
 
                     ssrArray.push(ssr);
@@ -86,28 +86,28 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
                 }
 
                 const ssr: SSR = {
-                    type: CODSSR,
-                    freeText: TXTSSR,
+                    type: codssr,
+                    freeText: txtssr,
                 };
 
-                if (ACCSSR) {
+                if (accssr) {
                     ssr.status = {
-                        type: ACCSSR,
+                        type: accssr,
                     };
                 }
 
-                if (NUMLEG) {
-                    if (NUMLEG !== 'P') {
-                        ssr.flightsReference = [{ id: parseInt(NUMLEG) }];
+                if (numleg) {
+                    if (numleg !== 'P') {
+                        ssr.flightsReference = [{ id: parseInt(numleg) }];
                     }
                 }
 
-                if (NUMPAX) {
-                    ssr.paxReference = [{ id: NUMPAX }];
+                if (numpax) {
+                    ssr.paxReference = [{ id: numpax }];
                 }
 
-                if (CIASSR) {
-                    ssr.companyId = CIASSR;
+                if (ciassr) {
+                    ssr.companyId = ciassr;
                 }
 
                 ssrArray.push(ssr);
@@ -117,11 +117,11 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
             case OS: {
                 const osiRemark: Remark = {
                     type: 'OS',
-                    freeText: TXTSSR
+                    freeText: txtssr
                 };
 
-                if (CIASSR) {
-                    osiRemark.companyId = CIASSR;
+                if (ciassr) {
+                    osiRemark.companyId = ciassr;
                 }
 
                 osiRemarks.push(osiRemark);
@@ -130,14 +130,14 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
 
             case FT: {
                 fareTourCode.push({
-                    freeText: TXTSSR,
-                    paxReference: NUMPAX ? [{ id: NUMPAX }] : []
+                    freeText: txtssr,
+                    paxReference: numpax ? [{ id: numpax }] : []
                 });
                 break;
             }
 
             case FE: {
-                fareEndorsementRemarks.push(TXTSSR);
+                fareEndorsementRemarks.push(txtssr);
                 break;
             }
             case RF: {
@@ -145,7 +145,7 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
             }
 
             case TK: {
-                if (TXTSSR === 'OK') {
+                if (txtssr === 'OK') {
                     tkok = true;
                 }
                 break;
@@ -154,8 +154,8 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
             case RM:
             case SI: {
                 remarks.push({
-                    type: TIPOELEMENTO,
-                    freeText: TXTSSR
+                    type: tipoelemento,
+                    freeText: txtssr
                 });
                 break;
             }
@@ -172,8 +172,8 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
 
             case FP: {
                 const formsOfPayment: FormOfPayment = {
-                    reference: TXTSSR,
-                    paxReference: NUMPAX ? [{ id: NUMPAX }] : undefined
+                    reference: txtssr,
+                    paxReference: numpax ? [{ id: numpax }] : undefined
                 }
                 fops.push(formsOfPayment);
                 break;
@@ -181,32 +181,32 @@ export const mapSsrToRoot = (ssrData: ElementsDB[], itlBooking: Booking) => {
 
             default: {
                 const ssr: SSR = {
-                    type: TIPOELEMENTO,
-                    freeText: TXTSSR,
+                    type: tipoelemento,
+                    freeText: txtssr,
                 };
 
-                if (ACCSSR) {
+                if (accssr) {
                     ssr.status = {
-                        type: ACCSSR,
+                        type: accssr,
                     };
                 }
 
-                if (NUMLEG) {
-                    if (NUMLEG !== 'P') {
-                        ssr.flightsReference = [{ id: NUMLEG }];
+                if (numleg) {
+                    if (numleg !== 'P') {
+                        ssr.flightsReference = [{ id: numleg }];
                     }
                 }
 
-                if (NUMPAX) {
-                    ssr.paxReference = [{ id: NUMPAX }];
+                if (numpax) {
+                    ssr.paxReference = [{ id: numpax }];
                 }
 
-                if (CIASSR) {
-                    ssr.companyId = CIASSR;
+                if (ciassr) {
+                    ssr.companyId = ciassr;
                 }
 
-                if (CODSSR && TIPOELEMENTO !== FZ) {
-                    ssr.type = CODSSR;
+                if (codssr && tipoelemento !== FZ) {
+                    ssr.type = codssr;
                 }
 
                 ssrArray.push(ssr);
@@ -248,14 +248,14 @@ export const mapResidentDiscount = (ssrData: ElementsDB[], itlBooking: Booking):
 
             const element = elements[key];
 
-            const residentDiscountElement = element.find((el) => el.TIPOELEMENTO === FD);
-            const fzElement = element.find((elemento) => elemento.TIPOELEMENTO === FZ);
-            const fzText = fzElement ? fzElement.TXTSSR : '';
+            const residentDiscountElement = element.find((el) => el.tipoelemento === FD);
+            const fzElement = element.find((elemento) => elemento.tipoelemento === FZ);
+            const fzText = fzElement ? fzElement.txtssr : '';
 
             if (residentDiscountElement && fzText) {
 
-                const residentDiscountData: ResidentDiscount = mapStringToObject(residentDiscountElement.TXTSSR);
-                residentDiscountData.paxReference = { id: residentDiscountElement.NUMPAX };
+                const residentDiscountData: ResidentDiscount = mapStringToObject(residentDiscountElement.txtssr);
+                residentDiscountData.paxReference = { id: residentDiscountElement.numpax };
                 // delete first / from fzline
                 residentDiscountData.fzLine = "NM" + fzText;
 
@@ -279,20 +279,20 @@ export const mapContactInformation = (ssrData: ElementsDB[], itlBooking: Booking
             const element = elements[key];
 
             element.forEach(el => {
-                const { TXTSSR, NUMPAX } = el;
+                const { txtssr, numpax } = el;
 
-                const isEmail = TXTSSR.includes("@");
-                const exists = TXTSSR && TXTSSR !== '' && TXTSSR !== null;
+                const isEmail = txtssr.includes("@");
+                const exists = txtssr && txtssr !== '' && txtssr !== null;
 
                 if (isEmail && exists) {
                     contactInformation.push({
-                        email: TXTSSR,
-                        paxReference: NUMPAX ? [{ id: NUMPAX }] : undefined
+                        email: txtssr,
+                        paxReference: numpax ? [{ id: numpax }] : undefined
                     });
                 } else if (exists) {
                     contactInformation.push({
-                        telephone: TXTSSR,
-                        paxReference: NUMPAX ? [{ id: NUMPAX }] : undefined
+                        telephone: txtssr,
+                        paxReference: numpax ? [{ id: numpax }] : undefined
                     });
                 }
             });
@@ -309,9 +309,9 @@ export const mapContactInformation = (ssrData: ElementsDB[], itlBooking: Booking
 }
 
 export const mapRF = (elements: ElementsDB[], itlBooking: Booking) => {
-    const rfElement = elements.find((element) => element.TIPOELEMENTO === RF);
+    const rfElement = elements.find((element) => element.tipoelemento === RF);
     if (rfElement) {
-        itlBooking.rf = rfElement.TXTSSR;
+        itlBooking.rf = rfElement.txtssr;
     }
 }
 const filterContactInfoEls = (els: ElementsDB[]) => {
@@ -331,17 +331,17 @@ const filterAndGroupElements = (elements: ElementsDB[], types: string[]) => {
     // filter elements equal to 'APE' or 'AP'
     if (types.includes(APE) && types.includes(AP)) {
         filteredElements = elements.filter(
-            (element) => element.TIPOELEMENTO === APE || element.TIPOELEMENTO === AP
+            (element) => element.tipoelemento === APE || element.tipoelemento === AP
         );
     } else if (types.includes(FZ) && types.includes(FD)) {
         filteredElements = elements.filter(
-            (element) => element.TIPOELEMENTO === FZ || element.TIPOELEMENTO === FD
+            (element) => element.tipoelemento === FZ || element.tipoelemento === FD
         );
     }
 
     // group by NUMPAX
     const groupedElements: { [key: string]: ElementsDB[] } = filteredElements.reduce((acc, element) => {
-        const key = element.NUMPAX;
+        const key = element.numpax;
         if (!acc[key]) {
             acc[key] = [];
         }

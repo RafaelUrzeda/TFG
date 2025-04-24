@@ -11,7 +11,7 @@ const init = async () => {
 			host: conf.datasource.host,
 			port: conf.datasource.port,
 			database: conf.datasource.database,
-			password: process.env["HuA6Tq3McQgPlN8ohS8unoPP485Kp8pr"],
+			password: "HuA6Tq3McQgPlN8ohS8unoPP485Kp8pr",
 			ssl: {
 				rejectUnauthorized: true,
 			},

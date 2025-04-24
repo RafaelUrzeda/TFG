@@ -1,4 +1,3 @@
-import { actualizarAmadeusSession, establecerCorrecto, establecerIncorrecto, startRegister } from '../database/infoSol.database';
 import { postAmadeusCommand } from '../externals/amadeusCommand.external';
 import { getAmadeus } from '../externals/ITLamadeus.external';
 import { getAmadeusPNR } from '../externals/pnrAmadeus.external';
@@ -19,7 +18,6 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 		locata: localizador
 	};
 	const itlBooking: Booking = {} as Booking;
-	await startRegister(idReserva);
 
 	const [bookingData, paxes, elements, flight] = await getDataBaseData(idReserva);
 
@@ -28,7 +26,6 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 
 
 	await getPNR(amaData);
-	await actualizarAmadeusSession(idReserva, amaData.amadeussession);
 
 	addDataToBooking(itlBooking, elements, paxes, flight, idReserva, amaData.pnr);
 
@@ -56,9 +53,6 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	if (booking.headers.amadeussession) {
 		itlBooking.localizador = localizador;
 		itlBooking.amadeussession = amaData.amadeussession;
-		await establecerCorrecto(itlBooking);
-	} else {
-		await establecerIncorrecto(itlBooking);
 	}
 	return JSON.stringify(itlBooking);
 };
@@ -142,7 +136,7 @@ const addElementsToBookingObject = (itlBooking: Booking, elementsData: ElementsD
 		'RF'
 	];
 	const elementosToMap = elementsData.filter((element) =>
-		conditions.some((condition) => condition === element.TIPOELEMENTO)
+		conditions.some((condition) => condition === element.tipoelemento)
 	);
 
 	mapSsrToRoot(elementosToMap, itlBooking);

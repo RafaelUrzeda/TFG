@@ -1,19 +1,19 @@
 export interface FlightDB {
-    IDRESREVA: number;
-    SEQSER: string;
-    NVUELO: string;
-    CIAAEREA: string;
-    NUMFLT: string;
-    CLASE: string;
-    APTDEP: string;
-    APTARR: string;
-    TIMDEP: string;
-    PASAJEROS: number;
-    CODIGOBLOQUEO1: string;
-    CODIGOBLOQUEO2: string;
-    CODIGOBLOQUEO3: string;
-    CONSULTARGYMS: string;
-    CODIGOBLOQUEOGYMS: string;
-    MERCADO: string;
-    RESERVARASIENTOS: string;
+    idresreva: number;
+    seqser: string;
+    nvuelo: string;
+    ciaaerea: string;
+    numflt: string;
+    clase: string;
+    aptdep: string;
+    aptarr: string;
+    timdep: string;
+    pasajeros: number;
+    codigobloqueo1: string;
+    codigobloqueo2: string;
+    codigobloqueo3: string;
+    consultargyms: string;
+    codigobloqueogyms: string;
+    mercado: string;
+    reservarasientos: string;
 }

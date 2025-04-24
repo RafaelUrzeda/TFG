@@ -7,9 +7,11 @@ const init = async (connectionData: PoolConfig) => {
 const status = async () => {
   try {
     await pool.query("SELECT NOW()");
+    console.log("PostgreSQL connection is OK");
     return { status: "ok" };
   } catch (error) {
     const e = error as ErrorEvent;
+    console.log("PostgreSQL connection error", e.message);
     return { status: "fail" };
   }
 };

@@ -56,7 +56,7 @@ export const deletePassengers = async (
     const existingPassengersSet = new Set(
         pasajeros.map(
             (p) =>
-                `${p.NOMBRE.trim().toUpperCase()} ${p.APELLIDO1.trim().toUpperCase()} ${p.APELLIDO2?.trim().toUpperCase() || ""}`.trim()
+                `${p.nombre.trim().toUpperCase()} ${p.apellido1.trim().toUpperCase()} ${p.apellido2?.trim().toUpperCase() || ""}`.trim()
         )
     );
 

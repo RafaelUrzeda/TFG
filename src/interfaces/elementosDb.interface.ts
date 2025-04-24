@@ -1,12 +1,12 @@
 export interface ElementsDB {
-    IDRESRVA: number;
-    TIPOELEMENTO: string;
-    CODSSR: string;
-    ACCSSR: string;
-    CIASSR: string;
-    TXTSSR: string;
-    NUMLEG: string;
-    NUMPAX: string;
-    NUMPAXAMADEUS: number;
-    COMANDOAMADEUS: string;
+    idresrva: number;
+    tipoelemento: string;
+    codssr: string;
+    accssr: string;
+    ciassr: string;
+    txtssr: string;
+    numleg: string;
+    numpax: string;
+    numpaxamadeus: number;
+    comandoamadeus: string;
 }
