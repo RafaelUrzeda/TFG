@@ -5,7 +5,6 @@ import { mapPaxes } from '../mappers/pasajeros.mapper';
 import { mapContactInformation, mapResidentDiscount, mapRF, mapSsrToRoot } from '../mappers/ssr.mapper';
 import { mapDataFlightToMultiSegmentRequest } from '../mappers/vuelos.mapper';
 import { dataBooking, dataFlight, dataPaxes, dataSsr } from './database.service';
-import { finishBooking } from './llamadasItlAmadeus.service';
 import { deleteElements } from './procesaPnr.service';
 
 let IdReserva: number | string = 0;
@@ -27,17 +26,18 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	itlBooking.idSolicitud = bookingData.IDSOLICITUD;
 
 
-	await getPNR(amaData);
+	await getPNR(IdReserva);
+	console.log(JSON.stringify(amaData.pnr));
 
-	addDataToBooking(itlBooking, elements, paxes, flight, idReserva, amaData.pnr);
+	addDataToBooking(itlBooking, elements, paxes, flight, IdReserva, amaData.pnr);
 
 	// process passengers
-	const nuCommands = await mapTravellerInfoFomDB(itlBooking);
-	await executeCommandList(nuCommands, token, amaData);
+	// const nuCommands = await mapTravellerInfoFomDB(itlBooking);
+	// await executeCommandList(nuCommands, token, amaData);
 
 	//update object pnr
-	await sanitizeAmadeusErrors(amaData);
-	await getPNR(amaData);
+	// await sanitizeAmadeusErrors(amaData);
+	// await getPNR(amaData);
 
 	syncPassengerIds(itlBooking, amaData.pnr);
 
@@ -49,8 +49,8 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	addElementsToBookingObject(itlBooking, elements);
 
 	itlBooking.tkok = true;
-	const booking = await finishBooking(itlBooking);
-	itlBooking.PNR = booking || '';
+	// const booking = await finishBooking(itlBooking);
+	itlBooking.PNR = amaData.pnr || '';
 	return JSON.stringify(itlBooking);
 };
 
@@ -69,8 +69,6 @@ const getPNR = async (amaData: any) => {
 		response = await getAmadeusPNR(amaData.locata);
 	}
 	amaData.pnr = response;
-	amaData.headers = response;
-	amaData.amadeussession = response;
 }
 
 export const getDataBaseData = async (idBooking: number): Promise<[BookingData, PaxesDB[], ElementsDB[], FlightDB[]]> => {
