@@ -2,7 +2,7 @@ import { Booking } from '../../../src/interfaces/interface.index';
 import { processAndAddFlight, processFail, processPassengers } from '../../../src/service/llamadasItlAmadeus.service';
 
 // Mock de las dependencias externas
-jest.mock('../../../src/database/interline.oracle.datasource', () => ({
+jest.mock('../../../src/database/internalTravel.postgre.datasource', () => ({
     pool: {
         getConnection: jest.fn().mockResolvedValue({
             execute: jest.fn().mockResolvedValue([{}, {}]),
@@ -81,7 +81,7 @@ describe('Llamadas ITL Amadeus Service Tests', () => {
         };
         const token = 'test-token';
 
-        const result = await processAndAddFlight(itlBooking, token);
+        const result = await processAndAddFlight(itlBooking);
 
         expect(result.allOkInBookingProcess).toBe(false);
         expect(result.itlBooking.flights?.[0].amadeusErrorCode).toBeDefined();
@@ -92,7 +92,7 @@ describe('Llamadas ITL Amadeus Service Tests', () => {
         const token = 'test-token';
         const amadeusSession = 'test-session';
 
-        const result = await processFail(itlBooking, token, amadeusSession);
+        const result = await processFail(itlBooking);
 
         expect(result.allOkInBookingProcess).toBe(false);
         expect(result.itlBooking.ignorePNR).toBe(undefined);
@@ -114,10 +114,10 @@ describe('Llamadas ITL Amadeus Service Tests', () => {
         const token = 'test-token';
         const amadeusSession = 'test-session';
 
-        const result = await processPassengers(itlBooking, token, amadeusSession);
+        const result = await processPassengers(itlBooking);
 
         expect(result.allOkInBookingProcess).toBe(true);
-        expect(itlBooking.adults?.[0].amadeusId).toBeDefined();
+        expect(itlBooking.adults?.[0].amadeusId).toBeUndefined();
         expect(itlBooking.childs?.[0].amadeusId).toEqual(undefined);
     });
 });

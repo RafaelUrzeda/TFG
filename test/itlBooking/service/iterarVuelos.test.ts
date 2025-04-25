@@ -1,194 +1,132 @@
+import { getAmadeus } from '../../../src/externals/ITLamadeus.external';
+import { Booking } from '../../../src/interfaces/interface.index';
 import { processAndAddFlight } from '../../../src/service/llamadasItlAmadeus.service';
 
-import { getGyms } from '../../../src/externals/gyms.external';
-import { getAmadeus } from '../../../src/externals/ITLamadeus.external';
-import { Booking, codigosBloqueo, Flight } from '../../../src/interfaces/interface.index';
-
-jest.mock('../../../src/externals/gyms.external');
 jest.mock('../../../src/externals/ITLamadeus.external');
 
+const mockedGetAmadeus = getAmadeus as jest.Mock;
+
 describe('processAndAddFlight', () => {
-    const token = 'test-token';
-    const amadeusSession = 'test-session';
-
-    const mockFlight: Flight = {
-        llamadaGyms: 'S',
-        codigoBloqueo: ['123' as unknown as codigosBloqueo],
-        id: '',
-        airportCodeOrigin: 'PMI',
-        airportCodeDestination: 'MAD',
-        departureDate: '',
-        flightNumber: '123',
-        cabinClass: '',
-        companyId: '',
-        statusCode: '',
-        ticketsNumber: 0,
-        reservarAsientos: '',
-        seqser: 0
-    };
-
-    const mockRoot: Booking = {
-        flights: [mockFlight],
-        // otros campos necesarios
-    };
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    it('debería procesar todos los vuelos correctamente', async () => {
-        (getGyms as jest.Mock).mockResolvedValue({ forceIsPossible: 'S' });
-        (getAmadeus as jest.Mock).mockResolvedValue({
-            data: {
-                pnr: {
-                    originDestinationDetails: [
-                        {
-                            itineraryInfo: [
-                                {
-                                    relatedProduct: { status: ['OK'] },
-                                    errorInfo: { errorWarningDescription: { freeText: null } },
-                                    elementManagementItinerary: { reference: { number: '123' } },
-                                    travelProduct: {
-                                        productDetails: {
-                                            identification: 123
-                                        },
-                                        offpointDetail : {
-                                            cityCode: 'MAD',
-                                        },
-                                        boardpointDetail : {
-                                            cityCode: 'PMI'
-                                        },
-                                        product: {
-                                            arrDate: '010123',
-                                            arrTime: '1200',
-                                            depDate: '010123',
-                                            depTime: '0800'
-                                        }
-                                    }
-                                }
-                            ]
+    it('should process a booking successfully when Amadeus returns valid response', async () => {
+        const mockedAmadeusResponse = {
+            originDestinationDetails: [{
+                itineraryInfo: [{
+                    travelProduct: {
+                        boardpointDetail: { cityCode: 'MAD' },
+                        offpointDetail: { cityCode: 'BCN' },
+                        product: {
+                            depDate: '250425',
+                            arrDate: '250425',
+                            depTime: '1200',
+                            arrTime: '1330'
+                        },
+                        productDetails: {
+                            identification: '1234'
                         }
-                    ]
-                }
-            },
-            headers: { amadeussession: amadeusSession }
-        });
-
-        const result = await processAndAddFlight(mockRoot, token);
-
-        expect(result.allOkInBookingProcess).toBe(false);
-        expect(getAmadeus).toHaveBeenCalled();
-    });
-
-    it('debería manejar el fallo cuando un vuelo falla', async () => {
-        (getGyms as jest.Mock).mockResolvedValue({ forceIsPossible: 'S' });
-        (getAmadeus as jest.Mock).mockResolvedValueOnce({
-            data: {
-                pnr: {
-                    originDestinationDetails: [
-                        {
-                            itineraryInfo: [
-                                {
-                                    relatedProduct: { status: ['OK'] },
-                                    errorInfo: { errorWarningDescription: { freeText: null } },
-                                    elementManagementItinerary: { reference: { number: '123' } },
-                                    travelProduct: {
-                                        productDetails: {
-                                            identification: 123
-                                        },
-                                        offpointDetail : {
-                                            cityCode: 'MAD',
-                                        },
-                                        boardpointDetail : {
-                                            cityCode: 'PMI'
-                                        },
-                                        product: {
-                                            arrDate: '010123',
-                                            arrTime: '1200',
-                                            depDate: '010123',
-                                            depTime: '0800'
-                                        }
-                                    }
-                                }
-                            ]
+                    },
+                    elementManagementItinerary: {
+                        reference: { number: 'ABC123' }
+                    },
+                    relatedProduct: {
+                        status: ['HK']
+                    },
+                    errorInfo: {
+                        errorWarningDescription: {
+                            freeText: ''
                         }
-                    ]
-                }
-            },
-            headers: { amadeussession: amadeusSession }
-        }).mockResolvedValueOnce({
-            data: null,
-            headers: {}
-        });
-
-        const result = await processAndAddFlight(mockRoot, token);
-
-        expect(result.allOkInBookingProcess).toBe(false);
-        expect(getAmadeus).toHaveBeenCalled();
-    });
-
-    it('debería intentar con códigos de bloqueo cuando llamadaGyms no es "S"', async () => {
-        const mockFlightWithoutGyms: Flight = {
-            llamadaGyms: 'N',
-            codigoBloqueo: ['123' as unknown as codigosBloqueo],
-            id: '',
-            airportCodeOrigin: 'PMI',
-            airportCodeDestination: 'MAD',
-            departureDate: '',
-            flightNumber: '',
-            cabinClass: '',
-            companyId: '',
-            statusCode: '',
-            ticketsNumber: 0,
-            reservarAsientos: '',
-            seqser: 0
+                    }
+                }]
+            }]
         };
 
-        const mockRootWithoutGyms: Booking = {
-            flights: [mockFlightWithoutGyms],
-            // otros campos necesarios
+        mockedGetAmadeus.mockResolvedValue(mockedAmadeusResponse);
+
+        const booking: Booking = {
+            idReserva: '1',
+            flights: [{
+                id: 'f1',
+                idReserva: '1',
+                seqser: 1,
+                airportCodeOrigin: 'MAD',
+                airportCodeDestination: 'BCN',
+                departureDate: '250425',
+                flightNumber: '1234',
+                cabinClass: 'Y',
+                companyId: 'IB',
+                statusCode: 'OK',
+                ticketsNumber: 1,
+                llamadaGyms: 'NO',
+                codigoBloqueo: [{ codigoBloqueo: 'HK' }],
+                reservarAsientos: 'NO'
+            }]
         };
 
-        (getAmadeus as jest.Mock).mockResolvedValue({
-            
-                pnr: {
-                    originDestinationDetails: [
-                        {
-                            itineraryInfo: [
-                                {
-                                    relatedProduct: { status: ['OK'] },
-                                    errorInfo: { errorWarningDescription: { freeText: null } },
-                                    elementManagementItinerary: { reference: { number: '123' } },
-                                    travelProduct: {
-                                        productDetails: {
-                                            identification: 123
-                                        },
-                                        offpontDetail : {
-                                            cityCode: 'MAD',
-                                        },
-                                        boardpointDetail : {
-                                            cityCode: 'PMI'
-                                        },
-                                        product: {
-                                            arrDate: '010123',
-                                            arrTime: '1200',
-                                            depDate: '010123',
-                                            depTime: '0800'
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ,
-            headers: { amadeussession: amadeusSession }
-        });
+        const result = await processAndAddFlight(booking);
 
-        const result = await processAndAddFlight(mockRootWithoutGyms, token);
+        expect(result.allOkInBookingProcess).toBe(true);
+        expect(result.itlBooking.flights?.[0].amadeusId).toBe('ABC123');
+    });
+
+    it('should return processFail if Amadeus response includes error', async () => {
+        const mockedAmadeusResponse = {
+            originDestinationDetails: [{
+                itineraryInfo: [{
+                    travelProduct: {
+                        boardpointDetail: { cityCode: 'MAD' },
+                        offpointDetail: { cityCode: 'BCN' },
+                        product: {
+                            depDate: '250425',
+                            arrDate: '250425',
+                            depTime: '1200',
+                            arrTime: '1330'
+                        },
+                        productDetails: {
+                            identification: '1234'
+                        }
+                    },
+                    elementManagementItinerary: {
+                        reference: { number: 'ABC123' }
+                    },
+                    relatedProduct: {
+                        status: ['HK']
+                    },
+                    errorInfo: {
+                        errorWarningDescription: {
+                            freeText: 'ERROR FOUND'
+                        }
+                    }
+                }]
+            }]
+        };
+
+        mockedGetAmadeus.mockResolvedValue(mockedAmadeusResponse);
+
+        const booking: Booking = {
+            idReserva: '2',
+            flights: [{
+                id: 'f2',
+                idReserva: '2',
+                seqser: 2,
+                airportCodeOrigin: 'MAD',
+                airportCodeDestination: 'BCN',
+                departureDate: '250425',
+                flightNumber: '1234',
+                cabinClass: 'Y',
+                companyId: 'IB',
+                statusCode: 'OK',
+                ticketsNumber: 1,
+                llamadaGyms: 'NO',
+                codigoBloqueo: [{ codigoBloqueo: 'HK' }],
+                reservarAsientos: 'NO'
+            }]
+        };
+
+        const result = await processAndAddFlight(booking);
 
         expect(result.allOkInBookingProcess).toBe(false);
-        expect(getGyms).not.toHaveBeenCalled();
-        expect(getAmadeus).toHaveBeenCalled();
     });
 });

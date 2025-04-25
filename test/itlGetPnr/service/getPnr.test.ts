@@ -16,16 +16,16 @@ describe('itlGetPnrService', () => {
 
         (getAmadeusPNR as jest.Mock).mockResolvedValue(mockResponse);
 
-        const result = await itlGetPnrService(locata, token);
+        const result = await itlGetPnrService(locata);
 
-        expect(getAmadeusPNR).toHaveBeenCalledWith(locata, token);
+        expect(getAmadeusPNR).toHaveBeenCalledWith(locata);
         expect(result).toEqual(mockResponse.data);
     });
 
     it('should handle errors gracefully', async () => {
         (getAmadeusPNR as jest.Mock).mockRejectedValue(new Error('Failed to fetch PNR'));
 
-        await expect(itlGetPnrService(locata, token)).rejects.toThrow('Failed to fetch PNR');
-        expect(getAmadeusPNR).toHaveBeenCalledWith(locata, token);
+        await expect(itlGetPnrService(locata)).rejects.toThrow('Failed to fetch PNR');
+        expect(getAmadeusPNR).toHaveBeenCalledWith(locata);
     });
 });

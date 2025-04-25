@@ -1,39 +1,46 @@
-import { FastifyReply } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { itlBookingController } from '../../../src/controllers/itlBooking.controllers';
-import { fullItlBookingService } from '../../../src/service/itlBooking.service'; // Asegúrate de que esta ruta sea correcta
+import { ITLBooking } from '../../../src/interfaces/itlBooking.interface';
+import { fullItlBookingService } from '../../../src/service/itlBooking.service';
 
 jest.mock('../../../src/service/itlBooking.service');
-jest.mock('fastify');
 
 describe('itlBookingController', () => {
-
   const mockRequest = {
     body: {
       idReserva: '123',
-      origen: 'ms'
     },
     headers: {
       authorization: 'test-token',
     },
-  };
+  } as unknown as FastifyRequest<{ Body: ITLBooking; Headers: { Authorization?: string } }>;
 
   const mockResponse = {
     header: jest.fn().mockReturnThis(),
     send: jest.fn(),
-  };
+  } as unknown as FastifyReply;
 
-  it('calls itlBookingService.fullItlBookingService with correct idReserva', async () => {
-    await itlBookingController(mockRequest as any, mockResponse as unknown as FastifyReply);
+  it('calls fullItlBookingService with correct idReserva', async () => {
+    (fullItlBookingService as jest.Mock).mockResolvedValue({ success: true });
 
-    expect(fullItlBookingService).toHaveBeenCalledWith("123", "test-token", "ms");
+    await itlBookingController(mockRequest, mockResponse);
+
+    expect(fullItlBookingService).toHaveBeenCalledWith('123');
   });
 
-  it('calls response.header and response.send with correct parameters', async () => {
+  it('sets the correct response headers and sends the response', async () => {
+    const mockServiceResponse = { success: true };
+    (fullItlBookingService as jest.Mock).mockResolvedValue(mockServiceResponse);
 
-    await itlBookingController(mockRequest as any, mockResponse as unknown as FastifyReply);
+    await itlBookingController(mockRequest, mockResponse);
 
     expect(mockResponse.header).toHaveBeenCalledWith('Content-Type', 'application/json');
+    expect(mockResponse.send).toHaveBeenCalledWith(mockServiceResponse);
+  });
 
-    expect(mockResponse.send).toHaveBeenCalled();
+  it('handles errors thrown by fullItlBookingService', async () => {
+    (fullItlBookingService as jest.Mock).mockRejectedValue(new Error('Service error'));
+
+    await expect(itlBookingController(mockRequest, mockResponse)).rejects.toThrow('Service error');
   });
 });

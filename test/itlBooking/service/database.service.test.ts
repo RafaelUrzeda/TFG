@@ -1,6 +1,6 @@
-import { getCodigosAmadeus, itlElements, itlPasajeros, itlReservas, itlVuelos, updateSolicitudesVuelo } from '../../../src/database/infoSol.database';
-import { Booking, BookingData, ElementsDB, FlightDB, PaxesDB } from '../../../src/interfaces/interface.index';
-import { dataBooking, dataFlight, dataPaxes, dataSsr, updateTables } from '../../../src/service/database.service';
+import { itlElements, itlPasajeros, itlVuelos } from '../../../src/database/infoSol.database';
+import { ElementsDB, FlightDB, PaxesDB } from '../../../src/interfaces/interface.index';
+import { dataFlight, dataPaxes, dataSsr } from '../../../src/service/database.service';
 import { notFoundElement } from '../../../src/validations/elementos.validations';
 import { notFoundPax } from '../../../src/validations/pasajeros.validation';
 import { notFoundFlight } from '../../../src/validations/vuelos.validations';
@@ -13,32 +13,32 @@ jest.mock('../../../src/validations/vuelos.validations');
 describe('Pasajeros', () => {
     const mockIdReservas = 123;
     const mockDatos: PaxesDB[] = [{
-        SEQPAX: '1',
-        NPAX: 1,
-        NOMBRE: 'John',
-        APELLIDO1: 'Doe',
-        APELLIDO2: 'Smith',
-        TRATAMIENTO: 'Mr',
-        TIPOPASAJERO: 'Adult',
-        PAXASOC: 0,
-        NOMBREAMADEUS: '',
-        NPAXAMADEUS: 0,
-        SOCIEDAD: '',
-        TOURCODE: '',
-        STAFF: '',
-        EMAIL: '',
-        TELEFONO: '',
-        NACDOCIDE: '',
-        DATNAC: '',
-        NACION: '',
-        NUMEROPASAPORTE: '',
-        FECHACADUCIDADPAS: '',
-        POBLACION: '',
-        TIPODOCRESIDENTE: '',
-        DOCUMENTO: '',
-        FORMAPAGO: '',
-        CANDIDATORESIDENTE: '',
-        IDRESRVA: 0
+        seqpax: '1',
+        npax: 1,
+        nombre: 'John',
+        apellido1: 'Doe',
+        apellido2: 'Smith',
+        tratamiento: 'Mr',
+        tipopasajero: 'Adult',
+        paxasoc: 0,
+        nombreamadeus: '',
+        npaxamadeus: 0,
+        sociedad: '',
+        tourcode: '',
+        staff: '',
+        email: '',
+        telefono: '',
+        nacdocide: '',
+        datnac: '',
+        nacion: '',
+        numeropasaporte: '',
+        fechacaducidadpas: '',
+        poblacion: '',
+        tipodocresidente: '',
+        documento: '',
+        formapago: '',
+        candidatoresidente: '',
+        idreserva: 0
     }];
 
     beforeEach(() => {
@@ -73,16 +73,16 @@ describe('Pasajeros', () => {
 describe('dataSsr', () => {
     const mockIdReservas = 123;
     const mockDatos: ElementsDB[] = [{
-        IDRESRVA: mockIdReservas,
-        TIPOELEMENTO: 'tipoElemento',
-        CODSSR: 'coddataSsr',
-        ACCSSR: 'accdataSsr',
-        CIASSR: 'ciasdataSsr',
-        TXTSSR: 'txtdataSsr',
-        NUMLEG: 'numLeg',
-        NUMPAX: 'numPax',
-        NUMPAXAMADEUS: 1,
-        COMANDOAMADEUS: 'comandoAmadeus'
+        idresrva: mockIdReservas,
+        tipoelemento: 'tipoElemento',
+        codssr: 'coddataSsr',
+        accssr: 'accdataSsr',
+        ciassr: 'ciasdataSsr',
+        txtssr: 'txtdataSsr',
+        numleg: 'numLeg',
+        numpax: 'numPax',
+        numpaxamadeus: 1,
+        comandoamadeus: 'comandoAmadeus'
     }];
 
     beforeEach(() => {
@@ -117,23 +117,23 @@ describe('dataSsr', () => {
 describe('dataFlight', () => {
     const mockIdReserva = 123;
     const mockDatos: FlightDB[] = [{
-        SEQSER: 'sequence',
-        NVUELO: 'flightNumber',
-        CIAAEREA: 'airline',
-        NUMFLT: 'flightNumber',
-        CLASE: 'class',
-        APTDEP: 'departureAirport',
-        APTARR: 'arrivalAirport',
-        TIMDEP: 'departureTime',
-        PASAJEROS: 2,
-        CODIGOBLOQUEO1: 'blockCode1',
-        CODIGOBLOQUEO2: 'blockCode2',
-        CODIGOBLOQUEO3: 'blockCode3',
-        CONSULTARGYMS: 'gymQuery',
-        CODIGOBLOQUEOGYMS: 'gymBlockCode',
-        MERCADO: 'market',
-        RESERVARASIENTOS: 'seatReservation',
-        IDRESREVA: 0
+        seqser: 'sequence',
+        nvuelo: 'flightNumber',
+        ciaaerea: 'airline',
+        numflt: 'flightNumber',
+        clase: 'class',
+        aptdep: 'departureAirport',
+        aptarr: 'arrivalAirport',
+        timdep: 'departureTime',
+        pasajeros: 2,
+        codigobloqueo1: 'blockCode1',
+        codigobloqueo2: 'blockCode2',
+        codigobloqueo3: 'blockCode3',
+        consultargyms: 'gymQuery',
+        codigobloqueogyms: 'gymBlockCode',
+        mercado: 'market',
+        reservarasientos: 'seatReservation',
+        idresreva: 0
     }];
 
     beforeEach(() => {
@@ -162,97 +162,5 @@ describe('dataFlight', () => {
 
         expect(itlVuelos).toHaveBeenCalledWith(mockIdReserva);
         expect(notFoundFlight).toHaveBeenCalledWith([]);
-    });
-});
-
-describe('dataBooking', () => {
-    const mockIdReserva = 123;
-    const mockDatos: BookingData = {
-        IDRESERVA: '123',
-        IDSOLICITUD: '',
-        NUMEROSOLICITUD: '',
-        SERVICIOS: '',
-        FECHAPETICION: '',
-        ACCION: '',
-        LOCATA: '',
-        USUATIO: '',
-        REVISADO: ''
-    };
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('should return reservation data when itlReservas finds data', async () => {
-        (itlReservas as jest.Mock).mockResolvedValue(mockDatos);
-
-        const result = await dataBooking(mockIdReserva);
-
-        expect(itlReservas).toHaveBeenCalledWith(mockIdReserva);
-        expect(result).toEqual(mockDatos);
-    });
-
-    it('should throw an error when itlReservas does not find data', async () => {
-        const mockError = new Error('No se encontraron datos de la reserva');
-        (itlReservas as jest.Mock).mockResolvedValue(null);
-
-        await expect(dataBooking(mockIdReserva)).rejects.toThrow(mockError);
-
-        expect(itlReservas).toHaveBeenCalledWith(mockIdReserva);
-    });
-});
-
-describe('updateTables', () => {
-    const mockRoot: Booking = {
-        idSolicitud: '1',
-        localizador: 'locator',
-        flights: [{
-            amadeusStatusCode: 'statusCode',
-            fullDepartureDate: '2023-01-01T00:00:00Z',
-            fullArrivalDate: '2023-01-01T02:00:00Z',
-            seqser: 1,
-            id: '',
-            airportCodeOrigin: '',
-            airportCodeDestination: '',
-            departureDate: '',
-            flightNumber: '',
-            cabinClass: '',
-            companyId: '',
-            statusCode: '',
-            ticketsNumber: 0,
-            llamadaGyms: '',
-            codigoBloqueo: [],
-            reservarAsientos: ''
-        }]
-    };
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('should update flight tables when flights are present', async () => {
-        const mockStatusCodes = {
-            ESTADOSVC: 'statusSvc',
-            CODIGOBLQ: 'blockCode'
-        };
-        (getCodigosAmadeus as jest.Mock).mockResolvedValue(mockStatusCodes);
-        (updateSolicitudesVuelo as jest.Mock).mockResolvedValue(undefined);
-
-        await updateTables(mockRoot);
-
-        expect(updateSolicitudesVuelo)
-    });
-
-    it('should not update flight tables when no flights are present', async () => {
-        const mockRootNoFlights: Booking = {
-            idSolicitud: '1',
-            localizador: 'locator',
-            flights: []
-        };
-
-        await updateTables(mockRootNoFlights);
-
-        expect(getCodigosAmadeus).not.toHaveBeenCalled();
-        expect(updateSolicitudesVuelo).not.toHaveBeenCalled();
     });
 });

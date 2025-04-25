@@ -11,9 +11,9 @@ describe('SSR Mapper', () => {
     describe('mapSsrToRoot', () => {
         it('should correctly map SSR elements to the booking object', () => {
             const ssrData: ElementsDB[] = [
-                { TIPOELEMENTO: 'SR', CODSSR: 'DOCS', TXTSSR: 'TEST', NUMLEG: '1', NUMPAX: '1', CIASSR: 'CI', ACCSSR: 'AC', IDRESRVA: 0, NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' },
-                { TIPOELEMENTO: 'OS', TXTSSR: 'OS TEST', IDRESRVA: 0, NUMPAXAMADEUS: 0, COMANDOAMADEUS: '', CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAX: '' },
-                { TIPOELEMENTO: 'TK', TXTSSR: 'OK', IDRESRVA: 0, NUMPAXAMADEUS: 0, COMANDOAMADEUS: '', CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAX: '' }
+                { tipoelemento: 'SR', codssr: 'DOCS', txtssr: 'TEST', numleg: '1', numpax: '1', ciassr: 'CI', accssr: 'AC', idresrva: 0, numpaxamadeus: 0, comandoamadeus: '' },
+                { tipoelemento: 'OS', txtssr: 'OS TEST', idresrva: 0, numpaxamadeus: 0, comandoamadeus: '', codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '' },
+                { tipoelemento: 'TK', txtssr: 'OK', idresrva: 0, numpaxamadeus: 0, comandoamadeus: '', codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '' }
             ];
 
             mapSsrToRoot(ssrData, itlBooking);
@@ -41,8 +41,8 @@ describe('SSR Mapper', () => {
     describe('mapResidentDiscount', () => {
         it('should correctly extract resident discount information', () => {
             const ssrData: ElementsDB[] = [
-                { TIPOELEMENTO: 'FD', TXTSSR: 'FD DESCUENTO X1234567A 12345', NUMPAX: '1', IDRESRVA: 0, CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' },
-                { TIPOELEMENTO: 'FZ', TXTSSR: 'FZ INFO', NUMPAX: '1', IDRESRVA: 0, CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' }
+                { tipoelemento: 'FD', txtssr: 'FD DESCUENTO X1234567A 12345', numpax: '1', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' },
+                { tipoelemento: 'FZ', txtssr: 'FZ INFO', numpax: '1', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' }
             ];
 
             mapResidentDiscount(ssrData, itlBooking);
@@ -64,8 +64,8 @@ describe('SSR Mapper', () => {
     describe('mapContactInformation', () => {
         it('should map contact information correctly', () => {
             const ssrData: ElementsDB[] = [
-                { TIPOELEMENTO: 'AP', TXTSSR: '987654321', NUMPAX: '1', IDRESRVA: 0, CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' },
-                { TIPOELEMENTO: 'APE', TXTSSR: 'email@test.com', NUMPAX: '2', IDRESRVA: 0, CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' }
+                { tipoelemento: 'AP', txtssr: '987654321', numpax: '1', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' },
+                { tipoelemento: 'APE', txtssr: 'email@test.com', numpax: '2', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' }
             ];
             
             mapContactInformation(ssrData, itlBooking);
@@ -79,7 +79,7 @@ describe('SSR Mapper', () => {
     describe('mapRF', () => {
         it('should map RF correctly when present', () => {
             const ssrData: ElementsDB[] = [
-                { TIPOELEMENTO: 'RF', TXTSSR: 'RF TEXT', IDRESRVA: 0, CODSSR: '', ACCSSR: '', CIASSR: '', NUMLEG: '', NUMPAX: '', NUMPAXAMADEUS: 0, COMANDOAMADEUS: '' }
+                { tipoelemento: 'RF', txtssr: 'RF TEXT', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' }
             ];
             
             mapRF(ssrData, itlBooking);
@@ -91,100 +91,18 @@ describe('SSR Mapper', () => {
             expect(itlBooking.rf).toBeUndefined();
         });
     });
-    it('should map SSR with different TIPOELEMENTO', () => {
+
+    it('should map SSR with different tipoelemento', () => {
         const ssrData: ElementsDB[] = [
-            {
-                TIPOELEMENTO: 'OS', TXTSSR: 'Test OS', CIASSR: 'CIASSR',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'FT', TXTSSR: 'Test FT', NUMPAX: '1',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'FE', TXTSSR: 'Test FE',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'RF', TXTSSR: 'Test RF',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'TK', TXTSSR: 'OK',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'RM', TXTSSR: 'Test RM',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'SI', TXTSSR: 'Test SI',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAX: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'FP', TXTSSR: 'Test FP', NUMPAX: '1',
-                IDRESRVA: 0,
-                CODSSR: '',
-                ACCSSR: '',
-                CIASSR: '',
-                NUMLEG: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
-            {
-                TIPOELEMENTO: 'DOCS', TXTSSR: 'Test DOCS', ACCSSR: 'A', NUMLEG: '1', NUMPAX: '1', CIASSR: 'CIASSR',
-                IDRESRVA: 0,
-                CODSSR: '',
-                NUMPAXAMADEUS: 0,
-                COMANDOAMADEUS: ''
-            },
+            { tipoelemento: 'OS', txtssr: 'Test OS', ciassr: 'CIASSR', idresrva: 0, codssr: '', accssr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'FT', txtssr: 'Test FT', numpax: '1', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'FE', txtssr: 'Test FE', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'RF', txtssr: 'Test RF', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'TK', txtssr: 'OK', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'RM', txtssr: 'Test RM', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'SI', txtssr: 'Test SI', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpax: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'FP', txtssr: 'Test FP', numpax: '1', idresrva: 0, codssr: '', accssr: '', ciassr: '', numleg: '', numpaxamadeus: 0, comandoamadeus: '' },
+            { tipoelemento: 'DOCS', txtssr: 'Test DOCS', accssr: 'A', numleg: '1', numpax: '1', ciassr: 'CIASSR', idresrva: 0, codssr: '', numpaxamadeus: 0, comandoamadeus: '' }
         ];
         mapSsrToRoot(ssrData, itlBooking);
         expect(itlBooking.ssrs).toBeDefined();

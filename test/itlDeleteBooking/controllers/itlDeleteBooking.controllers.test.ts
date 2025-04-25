@@ -1,12 +1,9 @@
-import { operationalTracer } from 'aea-logger';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { constants } from 'http2';
 import { deleteBooking } from '../../../src//interfaces/deleteBooking.interface';
 import { itlDeleteBookingService } from '../../../src//service/itlDeleteBooking.service';
 import { itlDeleteBooking } from '../../../src/controllers/itlDeleteBooking.controllers';
 
 jest.mock('../../../src//service/itlDeleteBooking.service');
-jest.mock('aea-logger');
 
 describe('itlDeleteBooking Controller', () => {
     let req: FastifyRequest<{ Body: deleteBooking, Headers: { 'Authorization': string } }>;
@@ -49,12 +46,6 @@ describe('itlDeleteBooking Controller', () => {
         (itlDeleteBookingService as jest.Mock).mockResolvedValue(mockResponse);
 
         await itlDeleteBooking(req, res);
-
-        expect(operationalTracer.info).toHaveBeenCalledWith('booking', {
-            request: { booking: { locata: '12345' } },
-            response: { description: mockResponse },
-            statusCode: constants.HTTP_STATUS_OK,
-        });
     });
 
     test('should return the correct response', async () => {

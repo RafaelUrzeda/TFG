@@ -24,10 +24,16 @@ describe('notFoundElmenent', () => {
 
     it('should not throw an error when datos contains elements', () => {
         const datos: ElementsDB[] | [] = [{
-            TIPOELEMENTO: 'CTCE', CODSSR: 'CTCE', TXTSSR: 'email@example.com', NUMLEG: '1', NUMPAX: '2', CIASSR: 'AA', ACCSSR: 'HK',
-            IDRESRVA: 0,
-            NUMPAXAMADEUS: 0,
-            COMANDOAMADEUS: ''
+            tipoelemento: 'CTCE',
+            codssr: 'CTCE',
+            txtssr: 'email@example.com',
+            numleg: '1',
+            numpax: '2',
+            ciassr: 'AA',
+            accssr: 'HK',
+            idresrva: 0,
+            numpaxamadeus: 0,
+            comandoamadeus: ''
         }];
 
         expect(() => notFoundElement(datos)).not.toThrow();
