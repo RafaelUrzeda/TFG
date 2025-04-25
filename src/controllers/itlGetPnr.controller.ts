@@ -6,7 +6,7 @@ const itlGetPnr = async (
     req: FastifyRequest<{ Body: deleteBooking }>,
     res: FastifyReply,
 ) => {
-    const { locata, xsid } = req.body;
+    const { locata } = req.body;
 
     const response = await itlGetPnrService( locata );
 

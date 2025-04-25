@@ -12,8 +12,7 @@ const postITLUpdateBooking = (app: FastifyInstance): void => {
                     type: "object",
                     properties: {
                         idReserva: { type: "number" },
-                        localizador: { type: "string"},
-                        xsid: { type: "string" }
+                        localizador: { type: "string"}
                     },
                     required: ['idReserva', 'localizador']
                 },

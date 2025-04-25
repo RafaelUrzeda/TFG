@@ -23,7 +23,6 @@ export const processAndAddFlight = async (itlBooking: Booking): Promise<ProcessF
 
 		contador++;
 	};
-	console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',);
 	response = { itlBooking, allOkInBookingProcess }
 
 	return response;
@@ -60,7 +59,6 @@ const processFlight = async (flight: Flight, contador: number) => {
         }
         if (bloqueo) {
             const resultadoAmadeus = await llamarAmadeus(flight, contador);
-			console.log('resultadoAmadeus', resultadoAmadeus);
             if (!resultadoAmadeus.successCallToExternalServices) {
                 response = await intentarConCodigoBloqueo(flight, contador);
             } else {

@@ -8,6 +8,7 @@ import { dataBooking, dataFlight, dataPaxes, dataSsr } from './database.service'
 import { deleteElements } from './procesaPnr.service';
 
 let IdReserva: number | string = 0;
+let PNR: any = null;
 
 const fullItlUpdateBookingService = async (idReserva: number, token: string, localizador: string): Promise<string> => {
 	const amaData: any = {
@@ -27,9 +28,8 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 
 
 	await getPNR(IdReserva);
-	console.log(JSON.stringify(amaData.pnr));
 
-	addDataToBooking(itlBooking, elements, paxes, flight, IdReserva, amaData.pnr);
+	addDataToBooking(itlBooking, elements, paxes, flight, IdReserva, PNR);
 
 	// process passengers
 	// const nuCommands = await mapTravellerInfoFomDB(itlBooking);
@@ -39,10 +39,10 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 	// await sanitizeAmadeusErrors(amaData);
 	// await getPNR(amaData);
 
-	syncPassengerIds(itlBooking, amaData.pnr);
+	syncPassengerIds(itlBooking, PNR);
 
 	// delete elements from pnr
-	const responseDeletedElements = await deleteElements(amaData.pnr);
+	const responseDeletedElements = await deleteElements(PNR);
 	amaData.amadeussession = responseDeletedElements;
 
 	// add elements to booking object	
@@ -50,7 +50,7 @@ const fullItlUpdateBookingService = async (idReserva: number, token: string, loc
 
 	itlBooking.tkok = true;
 	// const booking = await finishBooking(itlBooking);
-	itlBooking.PNR = amaData.pnr || '';
+	itlBooking.PNR = PNR || '';
 	return JSON.stringify(itlBooking);
 };
 
@@ -64,11 +64,11 @@ const addDataToBooking = (itlBooking: Booking, elements: ElementsDB[], paxes: Pa
 const getPNR = async (amaData: any) => {
 	let response;
 	if (amaData.amadeussession !== null) {
-		response = await getAmadeusPNR(amaData.locata);
+	response = await getAmadeusPNR(IdReserva.toString());
 	} else {
-		response = await getAmadeusPNR(amaData.locata);
+		response = await getAmadeusPNR(IdReserva.toString());
 	}
-	amaData.pnr = response;
+	PNR = response;
 }
 
 export const getDataBaseData = async (idBooking: number): Promise<[BookingData, PaxesDB[], ElementsDB[], FlightDB[]]> => {
