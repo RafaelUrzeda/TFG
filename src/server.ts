@@ -36,9 +36,8 @@ const start = async () => {
       host: conf.server.ipv6 ? "::" : "0.0.0.0",
     };
 
-    server.listen(fastifyListenOptions, (e) => {
-      if (!e) {
-      } else {
+    (await server).listen(fastifyListenOptions, (e: any) => {
+      if (!e) { /* empty */ } else {
         process.exit(1);
       }
     });

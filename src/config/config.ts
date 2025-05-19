@@ -19,7 +19,11 @@ const get: Config = {
 	amadeusParams: {
 		officeId: '1234',
 		dutyCode: 'pp'
-	}
+	},
+	
+	cors: {
+		origin: ['*']
+	},
 };
 
 export default get;

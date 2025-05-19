@@ -12,9 +12,7 @@ const postITLBooking = (app: FastifyInstance): void => {
                 body: {
                     type: "object",
                     properties: {
-                        locata: { type: "number" },
-                        xsid: { type: "string" }
-                    },
+                        locata: { type: "number" }                    },
                     required: ['locata']
                 },
             },

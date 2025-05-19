@@ -16,7 +16,7 @@ describe('itlDeleteBookingService', () => {
     test('should return "Canceled"', async () => {
         (getAmadeusPNR as jest.Mock).mockResolvedValue({ headers: { amadeussession: 'session123' } });
 
-        const result = await itlDeleteBookingService(locata, token);
+        const result = await itlDeleteBookingService(locata);
 
         expect(result).toBe('DELETED');
     });

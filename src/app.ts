@@ -1,3 +1,4 @@
+import cors from "@fastify/cors";
 import fastify from "fastify";
 import * as process from "node:process";
 import conf from "./config/config";
@@ -23,6 +24,7 @@ const init = async () => {
 
 const build = () => {
 	const app = fastify();
+	app.register(cors, conf.cors);
 	// Routes
 	routes(app).catch((e) => {
 	});

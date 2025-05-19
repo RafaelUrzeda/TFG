@@ -36,7 +36,7 @@ describe('itlDeleteBooking Controller', () => {
 
         await itlDeleteBooking(req, res);
 
-        expect(itlDeleteBookingService).toHaveBeenCalledWith('12345', 'Bearer token');
+        expect(itlDeleteBookingService).toHaveBeenCalledWith('12345');
         expect(res.header).toHaveBeenCalledWith('Content-Type', 'application/json');
         expect(res.send).toHaveBeenCalledWith(mockResponse);
     });

@@ -3,6 +3,7 @@ export interface Config {
 	logger: Logger;
 	datasource: Datasource;
 	amadeusParams: amadeusParams;
+	cors: cors;
 }
 
 
@@ -28,4 +29,8 @@ export interface Datasource {
 export interface amadeusParams {
 	officeId: string;
 	dutyCode: string;
+}
+
+export interface cors {
+	origin: string[];
 }

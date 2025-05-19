@@ -11,17 +11,16 @@ describe('itlGetPnrService', () => {
         jest.clearAllMocks();
     });
 
-    it('should fetch PNR data successfully', async () => {
-        const mockResponse = { data: { pnrHeader: [{ reservationInfo: { reservation: [{ controlNumber: 'ABC123' }] } }] } };
+it('should fetch PNR data successfully', async () => {
+    const mockResponse = { data: { pnrHeader: [{ reservationInfo: { reservation: [{ controlNumber: 'ABC123' }] } }] } };
 
-        (getAmadeusPNR as jest.Mock).mockResolvedValue(mockResponse);
+    (getAmadeusPNR as jest.Mock).mockResolvedValue(mockResponse);
 
-        const result = await itlGetPnrService(locata);
+    const result = await itlGetPnrService(locata);
 
-        expect(getAmadeusPNR).toHaveBeenCalledWith(locata);
-        expect(result).toEqual(mockResponse.data);
-    });
-
+    expect(getAmadeusPNR).toHaveBeenCalledWith(locata);
+    expect(result).toEqual(mockResponse);
+});
     it('should handle errors gracefully', async () => {
         (getAmadeusPNR as jest.Mock).mockRejectedValue(new Error('Failed to fetch PNR'));
 
