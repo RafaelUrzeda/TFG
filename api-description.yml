@@ -443,26 +443,6 @@ components:
           type: number
           example: 1
           description: Identificador único de la reserva
-    XSIDResponse:
-      type: object
-      required:
-        - success
-        - msg
-      properties:
-        success:
-          type: string
-          example: true/false
-          description: Mensaje de éxito
-        msg:
-          type: string
-          example: true/Usuario o contraseña incorrectos
-          description: >-
-            Si el usuario y contraseña es correcto da True, sino te informa que
-            el usuario o contraseña son incorrectos
-        XSID:
-          type: string
-          example: '123456'
-          description: XSID
     Booking:
       type: object
       required:
@@ -677,116 +657,6 @@ components:
           type: string
           example: XX
           description: Identificador de la aerolínea
-    multiavailability:
-      type: object
-      required:
-        - interlineOptions
-        - amadeusObject
-      properties:
-        interlineOptions:
-          type: object
-          required:
-            - soloXCIA
-            - vuelosMax
-            - actionCodeMD
-            - maxIntentos
-          properties:
-            soloXCIA:
-              type: boolean
-              description: Indica si se debe buscar una CIA en específico
-            vuelosMax:
-              type: number
-              example: 5
-              description: Número máximo de vuelos a buscar
-            fechaRef:
-              type: string
-              example: '2025'
-              description: 12-15 (string, required) - Fecha de referencia
-            actionCodeMD:
-              type: number
-              example: 1
-              description: Código de acción de MD
-            maxIntentos:
-              type: number
-              example: 3
-              description: Número máximo de intentos
-        amadeusObject:
-          type: object
-          required:
-            - messageActionDetails
-            - requestSection
-          properties:
-            messageActionDetails:
-              type: object
-              required:
-                - functionDetails
-              properties:
-                functionDetails:
-                  type: object
-                  required:
-                    - businessFunction
-                    - actionCode
-                  properties:
-                    businessFunction:
-                      type: number
-                      example: 1
-                      description: Función de negocio
-                    actionCode:
-                      type: number
-                      example: 1
-                      description: Código de acción
-            requestSection:
-              type: object
-              required:
-                - availabilityProductInfo
-                - availabilityOptions
-              properties:
-                availabilityProductInfo:
-                  type: object
-                  required:
-                    - availabilityDetails
-                    - departureLocationInfo
-                    - arrivalLocationInfo
-                  properties:
-                    availabilityDetails:
-                      type: object
-                      properties:
-                        departureDate:
-                          type: string
-                          example: '2025'
-                          description: 12-15 (string, required) - Fecha de salida
-                    departureLocationInfo:
-                      type: object
-                      required:
-                        - cityAirport
-                      properties:
-                        cityAirport:
-                          type: string
-                          example: LAX
-                          description: Código IATA del aeropuerto de origen
-                    arrivalLocationInfo:
-                      type: object
-                      required:
-                        - cityAirport
-                      properties:
-                        cityAirport:
-                          type: string
-                          example: JFK
-                          description: Código IATA del aeropuerto de destino
-                availabilityOptions:
-                  type: object
-                  required:
-                    - typeOfRequest
-                    - optionInfo
-                  properties:
-                    typeOfRequest:
-                      type: string
-                      example: '1'
-                      description: Tipo de petición
-                    optionInfo:
-                      type: array
-                      items: {}
-                      description: Información de la opción
     OptionInfo:
       type: object
       required:
@@ -809,20 +679,6 @@ components:
         locata:
           type: string
           description: Localizador de la reserva
-    GenerateXSID:
-      type: object
-      required:
-        - usuario
-        - password
-      properties:
-        usuario:
-          type: string
-          example: johndoe
-          description: Usuario
-        password:
-          type: string
-          example: qwerty
-          description: Contraseña
     Token:
       type: object
       required:
@@ -847,25 +703,6 @@ components:
           type: string
           example: type
           description: Tipo de token
-    multiavailabilityResponse:
-      type: object
-      required:
-        - basicFlightInfo
-        - infoOnClasses
-        - additionalFlightInfo
-      properties:
-        basicFlightInfo:
-          type: array
-          items: {}
-          description: Información básica de los vuelos
-        infoOnClasses:
-          type: array
-          items: {}
-          description: Información de las clases de los vuelos
-        additionalFlightInfo:
-          type: array
-          items: {}
-          description: Información adicional de los vuelos
     BasicFlightInfo:
       type: object
       required:

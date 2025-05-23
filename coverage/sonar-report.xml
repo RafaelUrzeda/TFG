@@ -1,127 +1,107 @@
 <testExecutions version="1">
-<file path="test\getConf.test.ts">
-<testCase name="getConf json config" duration="31">
-<failure message="Error"><![CDATA[Error: expect(received).toContain(expected) // indexOf
-
-Expected substring: &quot;{\&quot;server\&quot;:{\&quot;port\&quot;:3000,\&quot;ipv6\&quot;:false},\&quot;logger\&quot;:{\&quot;exclude\&quot;:\&quot;/health\&quot;,\&quot;level\&quot;:\&quot;info\&quot;,\&quot;operationalTracer\&quot;:false},\&quot;datasource\&quot;:{\&quot;user\&quot;:\&quot;root\&quot;,\&quot;port\&quot;:5432,\&quot;host\&quot;:\&quot;dpg-d04b7n3uibrs73au6ds0-a.oregon-postgres.render.com\&quot;,\&quot;database\&quot;:\&quot;internaltravel\&quot;},\&quot;amadeusParams\&quot;:{\&quot;officeId\&quot;:\&quot;1234\&quot;,\&quot;dutyCode\&quot;:\&quot;pp\&quot;},\&quot;cors\&quot;:{\&quot;origin\&quot;:[]}}&quot;
-Received string:    &quot;{\&quot;server\&quot;:{\&quot;port\&quot;:3000,\&quot;ipv6\&quot;:false},\&quot;logger\&quot;:{\&quot;exclude\&quot;:\&quot;/health\&quot;,\&quot;level\&quot;:\&quot;info\&quot;,\&quot;operationalTracer\&quot;:false},\&quot;datasource\&quot;:{\&quot;user\&quot;:\&quot;root\&quot;,\&quot;port\&quot;:5432,\&quot;host\&quot;:\&quot;dpg-d04b7n3uibrs73au6ds0-a.oregon-postgres.render.com\&quot;,\&quot;database\&quot;:\&quot;internaltravel\&quot;},\&quot;amadeusParams\&quot;:{\&quot;officeId\&quot;:\&quot;1234\&quot;,\&quot;dutyCode\&quot;:\&quot;pp\&quot;},\&quot;cors\&quot;:{\&quot;origin\&quot;:[\&quot;*\&quot;]}}&quot;
-    at Object.&lt;anonymous&gt; (C:\Users\rafae\Documents\daw\TFG\test\getConf.test.ts:5:34)
-    at Promise.then.completed (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\utils.js:298:28)
-    at new Promise (&lt;anonymous&gt;)
-    at callAsyncCircusFn (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\utils.js:231:10)
-    at _callCircusTest (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\run.js:316:40)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at _runTest (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\run.js:252:3)
-    at _runTestsForDescribeBlock (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\run.js:126:9)
-    at _runTestsForDescribeBlock (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\run.js:121:9)
-    at run (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\run.js:71:3)
-    at runAndTransformResultsToJestFormat (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
-    at jestAdapter (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
-    at runTestInternal (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-runner\build\runTest.js:367:16)
-    at runTest (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-runner\build\runTest.js:444:34)
-    at Object.worker (C:\Users\rafae\Documents\daw\TFG\node_modules\jest-runner\build\testWorker.js:106:12)]]></failure>
-</testCase>
-</file>
-<file path="test\utils\utils.test.ts">
-<testCase name="contarArnk deber&#xed;a retornar 0 si el array est&#xe1; vac&#xed;o" duration="51" />
-<testCase name="contarArnk deber&#xed;a retornar 0 si el array tiene un solo vuelo" duration="1" />
-<testCase name="contarArnk deber&#xed;a retornar 0 si todos los vuelos son consecutivos" duration="0" />
-<testCase name="contarArnk deber&#xed;a retornar el n&#xfa;mero correcto de ARNKS" duration="0" />
-<testCase name="contarArnk deber&#xed;a retornar el n&#xfa;mero correcto de ARNKS con m&#xfa;ltiples ARNKS" duration="1" />
-</file>
-<file path="test\itlBooking\service\iterarVuelos.test.ts">
-<testCase name="processAndAddFlight should process a booking successfully when Amadeus returns valid response" duration="14" />
-<testCase name="processAndAddFlight should return processFail if Amadeus response includes error" duration="1" />
-</file>
 <file path="test\itlBooking\mappers\vuelos.test.ts">
-<testCase name="convertirFecha deber&#xed;a convertir una fecha ISO a formato ddMMyy" duration="16" />
-<testCase name="mapDatosVuelosToMultiSegmentRequest deber&#xed;a mapear correctamente los datos de vuelo" duration="1" />
+<testCase name="convertirFecha deber&#xed;a convertir una fecha ISO a formato ddMMyy" duration="28" />
+<testCase name="mapDatosVuelosToMultiSegmentRequest deber&#xed;a mapear correctamente los datos de vuelo" duration="0" />
 <testCase name="mapDatosVuelosToMultiSegmentRequest deber&#xed;a asignar idReserva si se proporciona" duration="1" />
 <testCase name="mapDatosVuelosToMultiSegmentRequest deber&#xed;a ordenar los vuelos por seqser" duration="1" />
 </file>
-<file path="test\itlBooking\mappers\pasajeros.test.ts">
-<testCase name="mapPaxes should map a list of adults and children correctly" duration="30" />
-<testCase name="mapPaxes should map an infant to the corresponding adult" duration="1" />
-<testCase name="mapPaxes infants properly mapped to adults" duration="1" />
-<testCase name="mapPaxes should return an empty object if no passengers are provided" duration="1" />
-</file>
-<file path="test\itlBooking\service\llamadasItlAmadeus.service.test.ts">
-<testCase name="Llamadas ITL Amadeus Service Tests processAndAddFlight should process and add flight correctly" duration="21" />
-<testCase name="Llamadas ITL Amadeus Service Tests processFail should handle failure correctly" duration="1" />
-<testCase name="Llamadas ITL Amadeus Service Tests processPassengers should process passengers correctly" duration="20" />
-</file>
-<file path="test\itlUpdateBooking\service\procesaPnr.test.ts">
-<testCase name="deleteElements deber&#xed;a filtrar y cancelar los elementos correctos del PNR" duration="15" />
-</file>
-<file path="test\itlBooking\validations\pasajero.test.ts">
-<testCase name="notFoundPax should throw paxNotFound when datos is an empty array" duration="46" />
-<testCase name="notFoundPax should not throw an error when datos contains elements" duration="1" />
-</file>
 <file path="test\itlBooking\mappers\ssr.test.ts">
-<testCase name="SSR Mapper mapSsrToRoot should correctly map SSR elements to the booking object" duration="17" />
+<testCase name="SSR Mapper mapSsrToRoot should correctly map SSR elements to the booking object" duration="34" />
 <testCase name="SSR Mapper mapSsrToRoot should handle empty SSR array without errors" duration="1" />
-<testCase name="SSR Mapper mapResidentDiscount should correctly extract resident discount information" duration="2" />
-<testCase name="SSR Mapper mapContactInformation should map contact information correctly" duration="1" />
-<testCase name="SSR Mapper mapRF should map RF correctly when present" duration="1" />
-<testCase name="SSR Mapper mapRF should not add RF if no RF element exists" duration="31" />
-<testCase name="SSR Mapper should map SSR with different tipoelemento" duration="2" />
-</file>
-<file path="test\itlBooking\service\database.service.test.ts">
-<testCase name="Pasajeros should return passenger data when itlPasajeros finds data" duration="29" />
-<testCase name="Pasajeros should throw an error when itlPasajeros does not find data" duration="60" />
-<testCase name="dataSsr should return element data when itlElements finds data" duration="3" />
-<testCase name="dataSsr should throw an error when itlElements does not find data" duration="2" />
-<testCase name="dataFlight should return flight data when itlVuelos finds data" duration="1" />
-<testCase name="dataFlight should throw an error when itlVuelos does not find data" duration="1" />
-</file>
-<file path="test\itlBooking\validations\vuelos.test.ts">
-<testCase name="foundFlight should throw FlightNotFoundError when datos is an empty array" duration="4" />
-<testCase name="validationInputs should throw FlightNotFoundError when idReserva is not provided" duration="1" />
-<testCase name="validationInputs should not throw an error when idReserva is provided" duration="1" />
+<testCase name="SSR Mapper mapResidentDiscount should correctly extract resident discount information" duration="1" />
+<testCase name="SSR Mapper mapContactInformation should map contact information correctly" duration="0" />
+<testCase name="SSR Mapper mapRF should map RF correctly when present" duration="0" />
+<testCase name="SSR Mapper mapRF should not add RF if no RF element exists" duration="1" />
+<testCase name="SSR Mapper should map SSR with different tipoelemento" duration="11" />
 </file>
 <file path="test\itlBooking\dataBase\infoSol.database.test.ts">
-<testCase name="itlVuelos should return an empty array when no flights are found" duration="5" />
-<testCase name="itlVuelos should return an array of flights when flights are found" duration="2" />
-<testCase name="itlVuelos should throw an error when executeQuery fails" duration="11" />
+<testCase name="itlVuelos should return an empty array when no flights are found" duration="2" />
+<testCase name="itlVuelos should return an array of flights when flights are found" duration="0" />
+<testCase name="itlVuelos should throw an error when executeQuery fails" duration="8" />
+</file>
+<file path="test\itlBooking\validations\vuelos.test.ts">
+<testCase name="foundFlight should throw FlightNotFoundError when datos is an empty array" duration="2" />
+<testCase name="validationInputs should throw FlightNotFoundError when idReserva is not provided" duration="1" />
+<testCase name="validationInputs should not throw an error when idReserva is provided" duration="0" />
+</file>
+<file path="test\itlBooking\service\llamadasItlAmadeus.service.test.ts">
+<testCase name="Llamadas ITL Amadeus Service Tests processAndAddFlight should process and add flight correctly" duration="14" />
+<testCase name="Llamadas ITL Amadeus Service Tests processFail should handle failure correctly" duration="1" />
+<testCase name="Llamadas ITL Amadeus Service Tests processPassengers should process passengers correctly" duration="25" />
 </file>
 <file path="test\itlBooking\validations\elementos.test.ts">
-<testCase name="notFoundElmenent should throw solicitudNotFound when datos is an empty array" duration="3" />
-<testCase name="notFoundElmenent should not throw an error when datos contains elements" duration="0" />
+<testCase name="notFoundElmenent should throw solicitudNotFound when datos is an empty array" duration="19" />
+<testCase name="notFoundElmenent should not throw an error when datos contains elements" duration="1" />
+</file>
+<file path="test\itlBooking\mappers\pasajeros.test.ts">
+<testCase name="mapPaxes should map a list of adults and children correctly" duration="22" />
+<testCase name="mapPaxes should map an infant to the corresponding adult" duration="1" />
+<testCase name="mapPaxes infants properly mapped to adults" duration="2" />
+<testCase name="mapPaxes should return an empty object if no passengers are provided" duration="2" />
+</file>
+<file path="test\itlUpdateBooking\controllers\itlUpdateBooking.controller.test.ts">
+<testCase name="itlBookingController calls itlBookingService.fullItlBookingService with correct idReserva" duration="1" />
+<testCase name="itlBookingController calls response.header and response.send with correct parameters" duration="0" />
 </file>
 <file path="test\itlBooking\validations\seatMap.test.ts">
 <testCase name="seatMapValidation should throw seatMapError when datos is &quot;Seat map error&quot;" duration="2" />
 <testCase name="seatMapValidation should not throw an error for other values" duration="1" />
 </file>
-<file path="test\itlBooking\common\errorResponse.test.ts">
-<testCase name="ErrorResponse should initialize errorCode and errorDescription correctly" duration="1" />
-</file>
-<file path="test\itlBooking\service\itlBooking.service.test.ts">
-<testCase name="fullItlBookingService should complete booking successfully" duration="33" />
-<testCase name="fullItlBookingService should handle failed booking and update database" duration="1" />
-</file>
-<file path="test\itlDeleteBooking\service\itlDeleteBooking.service.test.ts">
-<testCase name="itlDeleteBookingService should return &quot;Canceled&quot;" duration="2" />
-</file>
-<file path="test\itlGetPnr\service\getPnr.test.ts">
-<testCase name="itlGetPnrService should fetch PNR data successfully" duration="2" />
-<testCase name="itlGetPnrService should handle errors gracefully" duration="5" />
+<file path="test\itlUpdateBooking\service\procesaPnr.test.ts">
+<testCase name="deleteElements deber&#xed;a filtrar y cancelar los elementos correctos del PNR" duration="19" />
 </file>
 <file path="test\seatMap\seatMap.service.test.ts">
 <testCase name="getSeatMapService should return seat map when API call is successful" duration="1" />
-<testCase name="getSeatMapService should throw an error when API call fails" duration="9" />
-</file>
-<file path="test\itlUpdateBooking\controllers\itlUpdateBooking.controller.test.ts">
-<testCase name="itlBookingController calls itlBookingService.fullItlBookingService with correct idReserva" duration="2" />
-<testCase name="itlBookingController calls response.header and response.send with correct parameters" duration="1" />
+<testCase name="getSeatMapService should throw an error when API call fails" duration="13" />
 </file>
 <file path="test\itlBooking\controllers\controller.test.ts">
-<testCase name="itlBookingController calls fullItlBookingService with correct idReserva" duration="3" />
+<testCase name="itlBookingController calls fullItlBookingService with correct idReserva" duration="24" />
 <testCase name="itlBookingController sets the correct response headers and sends the response" duration="1" />
-<testCase name="itlBookingController handles errors thrown by fullItlBookingService" duration="6" />
+<testCase name="itlBookingController handles errors thrown by fullItlBookingService" duration="12" />
+</file>
+<file path="test\itlBooking\common\errorResponse.test.ts">
+<testCase name="ErrorResponse should initialize errorCode and errorDescription correctly" duration="2" />
+</file>
+<file path="test\itlBooking\validations\pasajero.test.ts">
+<testCase name="notFoundPax should throw paxNotFound when datos is an empty array" duration="18" />
+<testCase name="notFoundPax should not throw an error when datos contains elements" duration="1" />
+</file>
+<file path="test\itlBooking\service\iterarVuelos.test.ts">
+<testCase name="processAndAddFlight should process a booking successfully when Amadeus returns valid response" duration="20" />
+<testCase name="processAndAddFlight should return processFail if Amadeus response includes error" duration="1" />
 </file>
 <file path="test\itlDeleteBooking\controllers\itlDeleteBooking.controllers.test.ts">
-<testCase name="itlDeleteBooking Controller should call itlDeleteBookingService with correct parameters" duration="5" />
+<testCase name="itlDeleteBooking Controller should call itlDeleteBookingService with correct parameters" duration="2" />
 <testCase name="itlDeleteBooking Controller should log information with operationalTracer" duration="0" />
-<testCase name="itlDeleteBooking Controller should return the correct response" duration="2" />
+<testCase name="itlDeleteBooking Controller should return the correct response" duration="1" />
+</file>
+<file path="test\itlGetPnr\service\getPnr.test.ts">
+<testCase name="itlGetPnrService should fetch PNR data successfully" duration="1" />
+<testCase name="itlGetPnrService should handle errors gracefully" duration="7" />
+</file>
+<file path="test\itlBooking\service\database.service.test.ts">
+<testCase name="Pasajeros should return passenger data when itlPasajeros finds data" duration="15" />
+<testCase name="Pasajeros should throw an error when itlPasajeros does not find data" duration="15" />
+<testCase name="dataSsr should return element data when itlElements finds data" duration="2" />
+<testCase name="dataSsr should throw an error when itlElements does not find data" duration="1" />
+<testCase name="dataFlight should return flight data when itlVuelos finds data" duration="1" />
+<testCase name="dataFlight should throw an error when itlVuelos does not find data" duration="6" />
+</file>
+<file path="test\utils\utils.test.ts">
+<testCase name="contarArnk deber&#xed;a retornar 0 si el array est&#xe1; vac&#xed;o" duration="12" />
+<testCase name="contarArnk deber&#xed;a retornar 0 si el array tiene un solo vuelo" duration="0" />
+<testCase name="contarArnk deber&#xed;a retornar 0 si todos los vuelos son consecutivos" duration="0" />
+<testCase name="contarArnk deber&#xed;a retornar el n&#xfa;mero correcto de ARNKS" duration="1" />
+<testCase name="contarArnk deber&#xed;a retornar el n&#xfa;mero correcto de ARNKS con m&#xfa;ltiples ARNKS" duration="1" />
+</file>
+<file path="test\itlDeleteBooking\service\itlDeleteBooking.service.test.ts">
+<testCase name="itlDeleteBookingService should return &quot;Canceled&quot;" duration="0" />
+</file>
+<file path="test\itlBooking\service\itlBooking.service.test.ts">
+<testCase name="fullItlBookingService should complete booking successfully" duration="22" />
+<testCase name="fullItlBookingService should handle failed booking and update database" duration="1" />
+</file>
+<file path="test\getConf.test.ts">
+<testCase name="getConf json config" duration="1" />
 </file>
 </testExecutions>
